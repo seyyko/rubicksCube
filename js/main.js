@@ -16,8 +16,8 @@ createMoves();
 
 renderMap(cubeMap);
 
-export function doKingAlgorithm(map, history, panel, animated){
-    kingAlgorithm(map, history, panel, animated);
+export function doKingAlgorithm(map, history, panel, animationDuration, changeBg){
+    kingAlgorithm(map, history, panel, animationDuration, changeBg);
 }
 
 export function doSetCross(){
@@ -29,6 +29,7 @@ window.doSetCross = doSetCross;
 window.cm = cubeMap;
 window.h = history;
 window.p = historyPanel;
+window.ad = animationDuration;
 
 // const tests = [
 //     getPieceByFaceId("corner", [0, 1, 2], cubeMap),
