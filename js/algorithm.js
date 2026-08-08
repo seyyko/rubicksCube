@@ -1,4 +1,5 @@
 import { cubeMap } from "./cubeMap.js"
+import { executeMoves } from "./cubeRotation.js";
 import { kingAlgorithm } from "./king.js"
 
 // resolution algorithm steps:
@@ -18,9 +19,17 @@ function cloneMap(map){
     );
 }
 
-export function setCross(){
-    let map = cloneMap(cubeMap);
-    const crossMoves = Array();
-    kingAlgorithm(map, crossMoves);
-    return crossMoves;
+export async function algorithm(map, history, panel, animationDuration, changeBg){
+    let clonedMap = cloneMap(map);
+    const moves = Array();
+
+    // cross
+    await kingAlgorithm(clonedMap, moves);
+
+    // F2L
+    // ...
+
+    await executeMoves(moves, "solver", map, history, panel, animationDuration, changeBg)
+
+    return moves;
 }
