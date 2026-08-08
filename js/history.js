@@ -7,7 +7,7 @@
 // F2 <-> F'2
 
 import { cubeMap } from "./cubeMap.js";
-import { executeMoves } from "./cubeRotation.js";
+import { executeMove } from "./cubeRotation.js";
 
 // x  <-> x'
 const opposite = {
@@ -226,6 +226,8 @@ export function addMove(move, moveSource, history, panel){
             group.id = panel.children.length;
             panel.appendChild(group);
         }
+
+        scrollHistory(panel)
     }
 
     checkForDouble(history, panel, moveSource);
@@ -320,6 +322,17 @@ function checkForOpposite(history, panel, moveSource){
     }
 }
 
+function scrollHistory(panel) {
+    requestAnimationFrame(() => {
+        if (panel.scrollWidth > panel.clientWidth) {
+            panel.scrollTo({
+                left: panel.scrollWidth,
+                behavior: "smooth"
+            });
+        }
+    });
+}
+
 export function getMoveParameters(move){
     const content = moves[move].split(" ")
     const separator = (content.length / 3);
@@ -353,7 +366,7 @@ export function createMoves(){
     }
 }
 
-export function deleteGroup(history, historyPanel, groupId){
+export async function deleteGroup(history, historyPanel, groupId){
     const backUp = Array();
     console.log(`history before change: ${history}`)
     for (let i = historyPanel.children.length - 1; i > -1; i--) {
@@ -361,14 +374,15 @@ export function deleteGroup(history, historyPanel, groupId){
         for (let j = lastGroup.children.length - 1; j > -1; j--) {
             let move = lastGroup.children[j].textContent
             let moveSource = lastGroup.classList[1];
+            console.log("testouille:", move, moveSource)
             if (i !== groupId){
                 backUp.push([move, moveSource])
             }
-            executeMoves(opposite[move], moveSource, cubeMap, history, historyPanel, 0, true)
+            await executeMove(opposite[move], moveSource, cubeMap, history, historyPanel, 0, true)
         }
         if (i === groupId){
             for (let j = backUp.length- 1; j > -1; j--) {
-                executeMoves(backUp[j][0], backUp[j][1], cubeMap, history, historyPanel, 0, true)
+                await executeMove(backUp[j][0], backUp[j][1], cubeMap, history, historyPanel, 0, true)
             }
             console.log(`group${groupId} has been successfully deleted.`)
             console.log(`history after change: ${history}`)
