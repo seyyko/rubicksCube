@@ -370,7 +370,7 @@ export function deleteGroup(history, historyPanel, groupId){
             for (let j = backUp.length- 1; j > -1; j--) {
                 executeMoves(backUp[j][0], backUp[j][1], cubeMap, history, historyPanel, 0, true)
             }
-            console.log(`group ${groupId} has been successfully deleted.`)
+            console.log(`group${groupId} has been successfully deleted.`)
             console.log(`history after change: ${history}`)
             break;
         }
