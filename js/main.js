@@ -1,6 +1,6 @@
 import { layer } from "./layerHandler.js"
 import { cubeMap, getPieceByFaceId } from "./cubeMap.js"
-import { setCross } from "./algorithm.js"
+import { algorithm } from "./algorithm.js"
 import { renderMap } from "./cubeRenderer.js"
 import { createMoves } from "./history.js"
 import { kingAlgorithm } from "./king.js"
@@ -11,21 +11,21 @@ export const animationDuration = parseFloat(getComputedStyle(document.documentEl
 const mainCube = document.getElementById("mainCube");
 
 mainCube.appendChild(layer);
-
 createMoves();
-
 renderMap(cubeMap);
 
-export function doKingAlgorithm(map, history, panel, animationDuration, changeBg){
-    kingAlgorithm(map, history, panel, animationDuration, changeBg);
+export async function doKingAlgorithm(map, history, panel, animationDuration, changeBg){
+    await kingAlgorithm(map, history, panel, animationDuration, changeBg);
 }
 
-export function doSetCross(){
-    setCross();
+export async function doAlgorithm(map, history, panel, animationDuration, changeBg){
+    const h = await algorithm(map, history, panel, animationDuration, changeBg);
+    console.clear();
+    console.log("testouille2", h)
 }
 
 window.doKingAlgorithm = doKingAlgorithm;
-window.doSetCross = doSetCross;
+window.doAlgorithm = doAlgorithm;
 window.cm = cubeMap;
 window.h = history;
 window.p = historyPanel;
