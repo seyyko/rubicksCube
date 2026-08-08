@@ -21,6 +21,6 @@ function cloneMap(map){
 export function setCross(){
     let map = cloneMap(cubeMap);
     const crossMoves = Array();
-    kingAlgorithm(map, crossMoves)
-    console.log("crossMoves:", crossMoves);
+    kingAlgorithm(map, crossMoves);
+    return crossMoves;
 }
