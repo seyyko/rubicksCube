@@ -7,8 +7,8 @@ import { kingAlgorithm } from "./king.js"
 
 export const history = Array();
 export const historyPanel = document.getElementById("history");
-const mainCube = document.getElementById("mainCube");
 export const animationDuration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--animation-duration").trim()) * 1000;
+const mainCube = document.getElementById("mainCube");
 
 mainCube.appendChild(layer);
 
