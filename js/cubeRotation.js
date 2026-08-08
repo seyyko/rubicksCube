@@ -419,7 +419,3 @@ export async function executeMove(moveName, moveSource, map, history, panel=null
     addMove(moveName, moveSource, history, panel)
     await layerMove(move[0], move[1], map, move[2], animationDuration, changeBg)
 }
-
-// export async function name(params) {
-    
-// }
