@@ -357,7 +357,6 @@ export function deleteGroup(history, historyPanel, groupId){
     const backUp = Array();
     for (let i = historyPanel.children.length - 1; i > -1; i--) {
         let lastGroup = historyPanel.lastElementChild;
-        console.log(lastGroup)
         for (let j = lastGroup.children.length - 1; j > -1; j--) {
             let move = lastGroup.children[j].textContent
             let moveSource = lastGroup.classList[1];
@@ -370,7 +369,6 @@ export function deleteGroup(history, historyPanel, groupId){
             for (let j = backUp.length- 1; j > -1; j--) {
                 executeMoves(backUp[j][0], backUp[j][1], cubeMap, history, historyPanel, 0, true)
             }
-            console.log(history)
             break;
         }
     }
