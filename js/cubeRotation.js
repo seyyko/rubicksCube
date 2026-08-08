@@ -2,11 +2,12 @@ import { cubeMap, updateBackground } from "./cubeMap.js"
 import { layers, layer, resetLayer } from "./layerHandler.js"
 import { getMoveParameters, addMove } from "./history.js";
 import { renderMap } from "./cubeRenderer.js"
+import { wait } from "./shuffle.js";
 
 // exemple of input in script.js
-export function layerMove(name, direction, map, nbRotation=1, animationDuration=0, changeBg=false){
-    // Read the base duration from CSS every time
-    // in case it has been modified dynamically.
+export async function layerMove(name, direction, map, nbRotation=1, animationDuration=0, changeBg=false){
+    const promises = [];
+
     if (animationDuration > 0){
         // If a previous animation was interrupted,
         // restore the layer before starting a new one.
@@ -15,22 +16,32 @@ export function layerMove(name, direction, map, nbRotation=1, animationDuration=
         }
     }
 
-    // Multiple layers can be rotated simultaneously
-    // (x, y, z cube rotations for example).
     for (let i = 0; i < name.length; i++) {
-        executeLayerMove(name[i], parseInt(direction[i]), map, parseInt(nbRotation), animationDuration, changeBg);
+        promises.push(
+            executeLayerMove(name[i], parseInt(direction[i]), map, parseInt(nbRotation), animationDuration, changeBg)
+        );
+    }
+
+    await Promise.all(promises);
+
+    if (changeBg) {
+        layer.className = "layer";
+        updateBackground(map, true);
+    } else {
+        updateBackground(map, false);
     }
 }
 
-function executeLayerMove(name, direction, map, nbRotation, animationDuration, changeBg){
-    if (animationDuration > 0){
+async function executeLayerMove(name, direction, map, nbRotation, animationDuration){
+    const fullAnimationDuration = animationDuration * nbRotation;
+    if (fullAnimationDuration > 0){
         const layerName = getLayerByName(name);
         const layerGrid = layerName.grid;
         const layerRotateAxis = layerName.rotateAxis.toUpperCase();
 
         // Update CSS variables used by the animation.
         layer.style.setProperty("--rotate-value", `calc(90deg * ${nbRotation})`)
-        document.documentElement.style.setProperty("--animation-duration", animationDuration / 1000)
+        document.documentElement.style.setProperty("--animation-duration", fullAnimationDuration / 1000)
         
         // The animation itself is entirely handled by CSS.
         layer.className = `layer rotate${layerRotateAxis} ${direction > 0 ? "normal" : "reverse"}`;
@@ -47,7 +58,7 @@ movement name            : ${name[0].toUpperCase()}${direction < 0 ? "'" : ""}\n
 face moving              : ${name}\n
 direction                : ${direction}\n
 number of rotation       : ${nbRotation}\n
-animation duration (sec) ? ${animationDuration}\n
+animation duration (ms)  : ${fullAnimationDuration}\n
 ######################### \n\n`)
 
     console.log("map before movement:")
@@ -67,16 +78,7 @@ animation duration (sec) ? ${animationDuration}\n
         );
     }
 
-    // Once the animation ends, restore the layer
-    // and repaint the stickers.
-    if (changeBg){
-        setTimeout(() => {
-            layer.className = "layer";
-            updateBackground(map, true);
-        }, animationDuration)
-    }else{
-        updateBackground(map, false);
-    }
+    await wait(fullAnimationDuration);
 
     console.log("map after movement:")
     renderMap(cubeMap)
@@ -401,17 +403,23 @@ export function getOptimalMove(faceName, cubePos, targetPos){
     }
 }
 
-export function executeMoves(moves, movesSource, map, history, panel=null, animationDuration=0, changeBg=false){
-    let move;
-    if (typeof(moves) === "string"){
-        move = getMoveParameters(moves);
-        layerMove(move[0], move[1], map, move[2], animationDuration, changeBg)
-        addMove(moves, movesSource, history, panel)
-    }else{
-        for (let i = 0; i < moves.length; i++) {
-            move = getMoveParameters(moves[i]);
-            layerMove(move[0], move[1], map, move[2], animationDuration, changeBg)
-            addMove(moves[i], movesSource[i], history, panel)
-        }
+export async function executeMoves(moves, movesSource, map, history, panel=null, animationDuration=0, changeBg=false){
+    for (let i = 0; i < moves.length; i++) {
+        let move = getMoveParameters(moves[i]);
+        addMove(moves[i],
+            typeof(movesSource) === "string" ? movesSource : movesSource[i],
+            history,
+            panel)
+        await layerMove(move[0], move[1], map, move[2], animationDuration, changeBg)
     }
 }
+
+export async function executeMove(moveName, moveSource, map, history, panel=null, animationDuration=0, changeBg=false){
+    let move = getMoveParameters(moveName);
+    addMove(moveName, moveSource, history, panel)
+    await layerMove(move[0], move[1], map, move[2], animationDuration, changeBg)
+}
+
+// export async function name(params) {
+    
+// }
