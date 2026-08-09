@@ -10,7 +10,7 @@ import { cubeMap } from "./cubeMap.js";
 import { executeMove } from "./cubeRotation.js";
 
 // x  <-> x'
-const opposite = {
+export const opposite = {
     "F": "F'",
     "F'": "F",
     "F2": "F'2",
