@@ -1,8 +1,7 @@
 #canvas{
     position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: grid;
+    place-items: center;
 
     perspective: 800px;
     overflow: hidden;
