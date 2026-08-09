@@ -50,10 +50,10 @@ resolveBtn.addEventListener("click", () => {
     toolMode = !toolMode; // toggle on/off toolMode.
 
     document.querySelector("#controls .moves")
-    .style.display = toolMode ? "none" : "flex";
+    .style.display = toolMode ? "none" : "grid";
 
     toolsContainer
-    .style.display = toolMode ? "flex" : "none";
+    .style.display = toolMode ? "grid" : "none";
 
     resolveBtn.classList.toggle("active")
 });
