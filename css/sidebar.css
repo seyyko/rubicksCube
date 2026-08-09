@@ -188,7 +188,6 @@
 
 }
 
-/* Chrome */
 .solvingDelay input::-webkit-slider-thumb {
     appearance: none;
     -webkit-appearance: none;
@@ -197,21 +196,15 @@
     height: calc(var(--moves-button-size) / 2);
 
     background-color: rgba(34, 34, 34, 1);
-    border: none;
-    border-radius: 0;
-
+    border: none; border-radius: 0;
     cursor: pointer;
 }
-
-/* Firefox */
 .solvingDelay input::-moz-range-thumb {
     width: calc(var(--moves-button-size) / 2);
     height: calc(var(--moves-button-size) / 2);
 
     background-color: rgba(34, 34, 34, 1);
-    border: none;
-    border-radius: 0;
-
+    border: none; border-radius: 0;
     cursor: pointer;
 }
 
