@@ -19,7 +19,7 @@ function cloneMap(map){
     );
 }
 
-export async function algorithm(map, history, panel, animationDuration, changeBg){
+export async function algorithm(map){
     let clonedMap = cloneMap(map);
     const moves = Array();
 
