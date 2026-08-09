@@ -71,6 +71,7 @@
     grid-template-columns: 1fr;
     gap: var(--padding-size);
     overflow-y: scroll;
+    max-height: 100%;
 
     display: none;
 }
@@ -155,6 +156,65 @@
 #controls .tools .playbackControls button{
     width: 100%;
 }
+
+.solvingDelay {
+    display: grid;
+    grid-template-rows: auto calc(var(--moves-button-size) / 2);
+    background-color: rgba(34, 34, 34, .2);
+}
+
+.solvingDelay label{
+    display: grid;
+}
+.solvingDelay label:nth-of-type(1){
+    grid-template-columns: repeat(3, 1fr);
+}
+.solvingDelay label:nth-of-type(2){
+    grid-template-columns: 1fr;
+    text-align: center;
+}
+
+.solvingDelay label p:nth-of-type(2){
+    text-align: center;
+}
+.solvingDelay label p:nth-of-type(3){
+    text-align: right;
+}
+
+.solvingDelay input {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: transparent;
+
+}
+
+/* Chrome */
+.solvingDelay input::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: calc(var(--moves-button-size) / 2);
+    height: calc(var(--moves-button-size) / 2);
+
+    background-color: rgba(34, 34, 34, 1);
+    border: none;
+    border-radius: 0;
+
+    cursor: pointer;
+}
+
+/* Firefox */
+.solvingDelay input::-moz-range-thumb {
+    width: calc(var(--moves-button-size) / 2);
+    height: calc(var(--moves-button-size) / 2);
+
+    background-color: rgba(34, 34, 34, 1);
+    border: none;
+    border-radius: 0;
+
+    cursor: pointer;
+}
+
 
 /* commands */
 
