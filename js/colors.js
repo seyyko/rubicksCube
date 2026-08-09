@@ -42,7 +42,7 @@ function initColor(){
         const inputEl = colorsEl.querySelector(`span:nth-of-type(${i+1}) input`)
         inputEl.value = baseColors[i].color;
         spanEl.style.backgroundColor = baseColors[i].color;
-        colorsEl.style.backgroundColor = "transparent";
+        colorsEl.style.backgroundColor = "rgba(34, 34, 34, 0.2)";
         
         // Create a fresh object to avoid modifying baseColors directly.
         temp.push({
