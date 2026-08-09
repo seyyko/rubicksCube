@@ -1,11 +1,54 @@
 import { executeMove } from "./cubeRotation.js";
 import { cubeMap, resetMap } from "./cubeMap.js";
-import { resetHistory, deleteGroup } from "./history.js";
-import { shuffleCube } from "./shuffle.js";
+import { resetHistory, deleteGroup, opposite } from "./history.js";
+import { shuffleCube, wait } from "./shuffle.js";
 import { updateColor, resetColor } from "./colors.js";
 import { history, historyPanel, animationDuration } from "./main.js";
 import { createPopup } from "./popup.js";
 import { resetPosition } from "./pan.js";
+import { algorithm } from "./algorithm.js";
+
+// const & var
+
+const movesButtons = document.querySelectorAll("#controls .moves button");
+
+const resetEL = document.querySelector("#commands .reset");
+const shuffleEl = document.querySelector("#commands .shuffle");
+const resolveBtn = document.querySelector("#commands .resolve");
+
+const toolsContainer = document.querySelector("#controls .tools");
+
+const colorsContainer = document.querySelector(".paintCube");
+const colorPreviews = colorsContainer.querySelectorAll("span");
+const colorPickerInputs = colorsContainer.querySelectorAll("input");
+
+const resetColorBtn = document.querySelector(".resetColor button");
+const resetPosBtn = document.querySelector(".resetPos button");
+const debugInput = document.querySelector(".debug input");
+const mainCube = document.getElementById("mainCube");
+
+const popup = document.getElementById("popup");
+
+const solveBtn = document.querySelector(".solve");
+const previousBtn = document.querySelector(".previous");
+const pauseBtn = document.querySelector(".pause");
+const playBtn = document.querySelector(".play");
+const stopBtn = document.querySelector(".stop");
+const nextBtn = document.querySelector(".next");
+const playbackControls = document.querySelector(".playbackControls");
+const solvingDelayInput = document.querySelector(".solvingDelay input");
+
+let toolMode = false;
+
+let selectedGroup = null;
+
+let algoMoves = [];
+let moveDone = [];
+let isPlaying = false;
+let isPaused = false;
+let solvingDelay = solvingDelayInput.value * 100; // max 1s
+
+// functions
 
 function disableBtns(list){
     list.forEach(element => {
@@ -19,33 +62,79 @@ function enableBtns(list){
     });
 }
 
-const movesButtons = document.querySelectorAll("#controls .moves button");
+function resetAlgoMoves(){
+    disableBtns(playbackControls.querySelectorAll("button"))
+    algoMoves = [];
+}
+
+async function play(){
+    if (isPlaying) return;
+
+    isPlaying = true;
+    isPaused = false;
+
+    while (algoMoves.length > 0 && !isPaused) {
+        await next()
+        await wait(solvingDelay)
+    }
+
+    isPlaying = false;
+}
+
+function pause(){
+    isPaused = true;
+}
+
+async function next(){
+    if (algoMoves.length === 0) return;
+
+    const move = algoMoves.shift();
+    moveDone.push(move);
+    await executeMove(move, "solver", cubeMap, history, historyPanel, animationDuration, true);
+}
+
+async function previous(animDur=animationDuration) {
+    if (moveDone.length === 0) return;
+
+    const move = moveDone.pop();
+    algoMoves.unshift(move);
+    await executeMove(opposite[move], "solver", cubeMap, history, historyPanel, animDur, true);
+}
+
+async function stop() {
+    isPaused = true;
+
+    while (moveDone.length > 0) {
+        await previous(0)
+    }
+}
+
+// events
+
 movesButtons.forEach(element => {
     element.addEventListener("click", async () => {
         const moveName = element.textContent;
 
         disableBtns(movesButtons)
+        resetAlgoMoves();
         await executeMove(moveName, "user", cubeMap, history, historyPanel, animationDuration, true)
-        enableBtns(movesButtons) 
+        enableBtns(movesButtons)
     });
 });
 
-const resetEL = document.querySelector("#commands .reset")
 resetEL.addEventListener("click", () => {
     resetMap();
     resetHistory(history, historyPanel);
+    resetAlgoMoves();
 });
 
-const shuffleEl = document.querySelector("#commands .shuffle")
 shuffleEl.addEventListener("click", async () => {
     disableBtns(movesButtons)
+    resetAlgoMoves();
     await shuffleCube();
     enableBtns(movesButtons) 
 });
 
-const resolveBtn = document.querySelector("#commands .resolve")
-const toolsContainer = document.querySelector("#controls .tools")
-let toolMode = false;
 resolveBtn.addEventListener("click", () => {
     toolMode = !toolMode; // toggle on/off toolMode.
 
@@ -57,11 +146,6 @@ resolveBtn.addEventListener("click", () => {
 
     resolveBtn.classList.toggle("active")
 });
-
-// colorPicker
-
-const colorsContainer = document.querySelector(".paintCube");
-const colorPreviews = colorsContainer.querySelectorAll("span");
 
 colorPreviews.forEach(preview => {
     const colorPickerInput = preview.querySelector("input");
@@ -93,7 +177,6 @@ colorPreviews.forEach(preview => {
     });
 });
 
-const colorPickerInputs = colorsContainer.querySelectorAll("input");
 colorPickerInputs.forEach(element => {
     element.addEventListener("change", () => {
         updateColor();
@@ -102,27 +185,18 @@ colorPickerInputs.forEach(element => {
     });
 });
 
-const resetColorEl = document.querySelector(".resetColor button")
-resetColorEl.addEventListener("click", () => {
+resetColorBtn.addEventListener("click", () => {
     resetColor();
 });
 
-const resetPosEl = document.querySelector(".resetPos button")
-resetPosEl.addEventListener("click", () => {
+resetPosBtn.addEventListener("click", () => {
     resetPosition(animationDuration);
 });
 
-const debugInput = document.querySelector(".debug input");
-const mainCube = document.getElementById("mainCube");
 debugInput.addEventListener("click", () => {
     if (debugInput.checked) mainCube.classList.add("showCell");
     else mainCube.classList.remove("showCell");
 })
-
-// popup
-
-const popup = document.getElementById("popup");
-let selectedGroup = null;
 
 historyPanel.addEventListener("click", (event) => {
     const button = event.target.closest("button");
@@ -142,48 +216,64 @@ historyPanel.addEventListener("click", (event) => {
     popup.style.display = "grid";
 });
 
-
 popup.addEventListener("click", async (e) => {
     const button = e.target.closest("button");
 
     if (!button) return;
 
     if (button.textContent === "yes") {
+        resetAlgoMoves()
         await deleteGroup(history, historyPanel, parseInt(selectedGroup.id));
     }
 
     popup.style.display = "none";
 });
 
-// playbackControls
-
-const previousBtn = document.querySelector(".previous");
-const pauseBtn = document.querySelector(".pause");
-const playBtn = document.querySelector(".play");
-const stopBtn = document.querySelector(".stop");
-const nextBtn = document.querySelector(".next");
-
-const playbackControls = document.querySelector(".playbackControls")
 playbackControls.querySelectorAll("button").forEach(element => {
     element.addEventListener("click", async () => {
         const btnName = element.classList[0];
+        element.disabled = true;
         switch (btnName) {
             case "previous":
-                
+                await previous()
                 break;
             case "pause":
-                
+                await pause()   
                 break;
             case "play":
-                
+                await play()
                 break;
             case "stop":
-                
+                await stop() 
                 break;
             case "next":
-                
+                await next()
                 break;
         }
+        element.disabled = false;
     })
 });
+
+solveBtn.addEventListener("click", async () => {
+    if (algoMoves.length > 0) return;
+
+    algoMoves = await algorithm(cubeMap);
+    moveDone = [];
+
+    if (algoMoves.length > 0) {
+        enableBtns(playbackControls.querySelectorAll("button"));
+    }
+});
+
+solvingDelayInput.addEventListener("input", () => {
+    solvingDelay = solvingDelayInput.value * 100;
+    document.querySelector(".solvingDelay label:nth-of-type(2)").textContent = `${solvingDelay / 1000}sec`;
+});
+
+window.addEventListener("load", () => {
+    resetAlgoMoves();
+    document.querySelector(".solvingDelay label:nth-of-type(2)").textContent = `${solvingDelay / 1000}sec`;
+});
+
+
 
