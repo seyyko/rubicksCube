@@ -29,7 +29,7 @@ export async function algorithm(map, history, panel, animationDuration, changeBg
     // F2L
     // ...
 
-    await executeMoves(moves, "solver", map, history, panel, animationDuration, changeBg)
+    // await executeMoves(moves, "solver", map, history, panel, animationDuration, changeBg)
 
     return moves;
 }
