@@ -18,9 +18,10 @@ export async function doKingAlgorithm(map, history, panel, animationDuration, ch
     await kingAlgorithm(map, history, panel, animationDuration, changeBg);
 }
 
-export async function doAlgorithm(map, history, panel, animationDuration, changeBg){
-    const h = await algorithm(map, history, panel, animationDuration, changeBg);
-    console.clear();
+export async function doAlgorithm(map){
+    const h = await algorithm(map);
+    console.log("algorithm:", h)
+    // console.clear();
 }
 
 window.doKingAlgorithm = doKingAlgorithm;
