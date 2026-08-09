@@ -1,10 +1,11 @@
 #sidebar{
     display: flex;
     flex-direction: column;
+    gap: var(--padding-size);
     overflow: hidden;
 
     background-color: rgba(34, 34, 34, 0.2);
-    gap: var(--padding-size);
+    color: white;
 }
 
 /* controls */
@@ -26,7 +27,6 @@
     /* display: flex;
     flex-direction: column; */
     gap: var(--padding-size);
-    color: white;
 
 }
 #controls .moves>section>p{
@@ -55,49 +55,23 @@
     height: var(--moves-button-size);
     
     opacity: 1;
-    color: white;
     background-color: rgba(34, 34, 34, 0.2);
 }
 
 #controls .moves button:active,
-#controls .tools .playbackControls button:active{
+#controls .tools .playbackControls button:active,
+#controls .tools .resetColor button:active,
+#controls .tools .resetPos button:active,
+#controls .tools .solve:active{
     background-color: rgba(34, 34, 34, 1);
 }
 
 #controls .moves button:disabled,
-#controls .tools .playbackControls button:disabled{
+#controls .tools .playbackControls button:disabled,
+#controls .tools .resetColor button:disabled,
+#controls .tools .resetPos button:disabled,
+#controls .tools .solve:disabled{
     background-color: rgba(34, 34, 34, 1);
-}
-
-/* commands */
-
-#commands{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr; 
-    grid-template-rows: 1fr; 
-    gap: var(--padding-size);
-    
-    width: 100%; 
-    /* padding: var(--padding-size); */
-}
-
-#commands button{
-    display: grid;
-    place-items: center;
-    
-    height: var(--moves-button-size);
-    padding: var(--padding-size);
-    font-size: 2em;
-
-    color: white;
-    background-color: rgba(34, 34, 34, 0.2);
-}
-
-#commands .reset{
-    flex: 1;
-    font-size: 1em;
-    aspect-ratio: unset;
-    text-align: center;
 }
 
 #commands .resolve.active{
@@ -107,26 +81,13 @@
 /* tools */
 
 #controls .tools{
-    height: 100%;
-    /* display: flex; */
     display: none;
+    /* display: flex; */
     flex-direction: column;
-    /* padding: var(--padding-size); */
     gap: var(--padding-size);
+
+    height: 100%;
     overflow: scroll;
-}
-
-#controls .tools .playbackControls{
-    /* display: flex;
-    justify-content: center; */
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: var(--moves-button-size);
-    gap: var(--padding-size);
-}
-
-#controls .tools .playbackControls button{
-    width: 100%;
 }
 
 /*  */
@@ -180,7 +141,6 @@
     place-items: center;
 
     background-color: rgba(34, 34, 34, 0.2);
-    color: white;
 }
 
 .debug input{
@@ -195,4 +155,59 @@
 
 .debug input:checked{
     backdrop-filter: invert(1);
+}
+
+/*  */
+
+#controls .tools .solve{
+    display: grid;
+    place-items: center;
+    width: 100%; 
+    height: var(--moves-button-size);
+    min-height: var(--moves-button-size);
+    background-color: rgba(34, 34, 34, 0.2);
+}
+
+#controls .tools .playbackControls{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: var(--moves-button-size);
+    gap: var(--padding-size);
+}
+
+#controls .tools .playbackControls button{
+    width: 100%;
+}
+
+/* commands */
+
+#commands{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+    grid-template-rows: 1fr; 
+    gap: var(--padding-size);
+    
+    width: 100%; 
+    /* padding: var(--padding-size); */
+}
+
+#commands button{
+    display: grid;
+    place-items: center;
+    
+    height: var(--moves-button-size);
+    font-size: 2em;
+
+    background-color: rgba(34, 34, 34, 0.2);
+}
+
+#commands button:active{
+    background-color: rgba(34, 34, 34, 1);
+}
+
+#commands .reset{
+    flex: 1;
+    font-size: 1em;
+    aspect-ratio: unset;
+    text-align: center;
 }
