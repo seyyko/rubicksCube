@@ -1,6 +1,6 @@
 #sidebar{
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: 1fr var(--moves-button-size);
     gap: var(--padding-size);
     overflow: hidden;
 
@@ -12,20 +12,16 @@
 
 #controls{
     overflow-y: scroll;
-    flex: 1;
 }
 
 #controls .moves{
-    display: flex; flex-direction: column;
+    display: grid;
     gap: var(--padding-size);
 }
 
 #controls .moves>section{
     display: grid;
-    grid-template-columns: auto;
     grid-template-rows: var(--moves-button-size) 1fr;
-    /* display: flex;
-    flex-direction: column; */
     gap: var(--padding-size);
 
 }
@@ -33,18 +29,12 @@
     display: grid;
     place-items: center;
     text-align: center;
-
     background-color: rgba(34, 34, 34, 0.2);
 }
 #controls .moves>section>div{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: var(--padding-size);
-}
-
-#controls .moves button{
-    min-width: var(--moves-button-size);
-    flex: 1;
 }
 
 #controls .moves button,
@@ -62,7 +52,7 @@
 #controls .tools .playbackControls button:active,
 #controls .tools .resetColor button:active,
 #controls .tools .resetPos button:active,
-#controls .tools .solve:active{
+#controls .tools .solve button:active{
     background-color: rgba(34, 34, 34, 1);
 }
 
@@ -70,31 +60,59 @@
 #controls .tools .playbackControls button:disabled,
 #controls .tools .resetColor button:disabled,
 #controls .tools .resetPos button:disabled,
-#controls .tools .solve:disabled{
+#controls .tools .solve button:disabled{
     background-color: rgba(34, 34, 34, 1);
-}
-
-#commands .resolve.active{
-    filter: invert(1);
 }
 
 /* tools */
 
 #controls .tools{
-    display: none;
-    /* display: flex; */
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
     gap: var(--padding-size);
+    overflow-y: scroll;
 
+    display: none;
+}
+
+/*  */
+
+.resetColor,
+.resetPos,
+.debug,
+.solve{
+    position: relative;
+    width: 100%;
+    height: var(--moves-button-size);
+    min-height: var(--moves-button-size);
+    user-select: none;
+}
+
+.resetColor button,
+.resetPos button,
+.debug input,
+.solve button{
+    all: unset;
+    width: 100%;
     height: 100%;
-    overflow: scroll;
+    cursor: pointer;
+}
+
+.resetColor button,
+.resetPos button,
+.debug label,
+.solve button{
+    display: grid;
+    place-items: center;
+
+    background-color: rgba(34, 34, 34, 0.2);
 }
 
 /*  */
 
 #controls .tools .paintCube{
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(2, var(--moves-button-size));
     gap: var(--padding-size);
     padding: var(--padding-size);
@@ -113,36 +131,6 @@
     visibility: hidden;
 }
 
-/*  */
-
-.resetColor,
-.resetPos,
-.debug{
-    position: relative;
-    width: 100%;
-    height: var(--moves-button-size);
-    min-height: var(--moves-button-size);
-    user-select: none;
-}
-
-.resetColor button,
-.resetPos button,
-.debug input{
-    all: unset;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-
-.resetColor button,
-.resetPos button,
-.debug label{
-    display: grid;
-    place-items: center;
-
-    background-color: rgba(34, 34, 34, 0.2);
-}
-
 .debug input{
     position: absolute;
     top: 0; left: 0;
@@ -155,17 +143,6 @@
 
 .debug input:checked{
     backdrop-filter: invert(1);
-}
-
-/*  */
-
-#controls .tools .solve{
-    display: grid;
-    place-items: center;
-    width: 100%; 
-    height: var(--moves-button-size);
-    min-height: var(--moves-button-size);
-    background-color: rgba(34, 34, 34, 0.2);
 }
 
 #controls .tools .playbackControls{
@@ -183,12 +160,11 @@
 
 #commands{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; 
+    grid-template-columns: 1fr var(--moves-button-size) var(--moves-button-size); 
     grid-template-rows: 1fr; 
     gap: var(--padding-size);
     
     width: 100%; 
-    /* padding: var(--padding-size); */
 }
 
 #commands button{
@@ -206,8 +182,11 @@
 }
 
 #commands .reset{
-    flex: 1;
     font-size: 1em;
     aspect-ratio: unset;
     text-align: center;
+}
+
+#commands .resolve.active{
+    filter: invert(1);
 }
