@@ -21,7 +21,6 @@ export async function doKingAlgorithm(map, history, panel, animationDuration, ch
 export async function doAlgorithm(map, history, panel, animationDuration, changeBg){
     const h = await algorithm(map, history, panel, animationDuration, changeBg);
     console.clear();
-    console.log("testouille2", h)
 }
 
 window.doKingAlgorithm = doKingAlgorithm;
