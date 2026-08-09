@@ -13,6 +13,10 @@
     box-sizing: border-box;
 }
 
+*::-webkit-scrollbar {
+    display: none;
+}
+
 body{
     font-family: monospace;
 }
@@ -34,24 +38,17 @@ a{
 
 main {
     position: relative;
-    width: 100vw;
-    height: 100dvh;
-    min-height: max(500px, 100dvh);
-
     display: grid;
-
     grid-template-columns: 300px 1fr;
     grid-template-rows: var(--history-height) 1fr;
-    /* gap: var(--padding-size); */
-    /* padding: var(--padding-size); */
 
     grid-template-areas:
         "link    history"
         "sidebar  canvas";
-}
 
-*::-webkit-scrollbar {
-    display: none;
+    width: 100vw;
+    height: 100dvh;
+    min-height: max(500px, 100dvh);
 }
 
 #link {
@@ -83,7 +80,6 @@ main {
 #sidebar,
 #canvas{
     margin: var(--padding-size);
-
 }
 
 @media screen and (max-width: 800px) {
