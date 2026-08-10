@@ -4,7 +4,7 @@ import { kingAlgorithm } from "./king.js"
 
 // resolution algorithm steps:
 // 1. white cross
-// 2. F2L
+// 2. LBL
 // 3. yellow cross
 // 4. matching yellow cross sides
 // 5. matching yellow corner
