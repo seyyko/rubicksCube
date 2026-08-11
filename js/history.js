@@ -374,7 +374,6 @@ export async function deleteGroup(history, historyPanel, groupId){
         for (let j = lastGroup.children.length - 1; j > -1; j--) {
             let move = lastGroup.children[j].textContent
             let moveSource = lastGroup.classList[1];
-            console.log("testouille:", move, moveSource)
             if (i !== groupId){
                 backUp.push([move, moveSource])
             }
