@@ -1,5 +1,6 @@
 import { cubeMap } from "./cubeMap.js"
 import { executeMoves } from "./cubeRotation.js";
+import { invertedTCase } from "./edgeParking.js";
 import { kingAlgorithm } from "./king.js"
 
 // resolution algorithm steps:
@@ -26,8 +27,8 @@ export async function algorithm(map){
     // cross
     await kingAlgorithm(clonedMap, moves);
 
-    // F2L
-    // ...
+    // LBL
+    await invertedTCase(clonedMap, moves);
 
     // await executeMoves(moves, "solver", map, history, panel, animationDuration, changeBg)
 
