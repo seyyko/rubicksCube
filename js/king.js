@@ -98,13 +98,11 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
         let edgeFaces;
         let king;
         let move;
-        let moveSource;
         let otherFace;
-        let state;
         let target;
 
         console.log("\n")
-        while (running) {
+        while(running){
             edge = getPieceByFaceId("edge", [frontCenter.faceId, upperCenter.faceId], map)
             edgeCube = Number(Object.keys(edge)[0])
             edgeFaces = getFacesByCube(edgeCube)
@@ -120,8 +118,7 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
 
                         otherFace = edgeFaces[0] === 0 ? edgeFaces[1] : edgeFaces[0];
                         move = `${faceToLayer[otherFace][0].toUpperCase()}2`;
-                        moveSource = "solver";
-                        await executeMove(move, moveSource, map, history, panel, animationDuration, changeBg);
+                        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
 
                     } else if (!isKing(frontCenter, king, map)){
                         console.log("# the edge is between the front and upper face and front is not the KING.");
@@ -144,11 +141,10 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                         target = 20;
                     }
 
-                    move = getOptimalMove("upperLayer", edgeCube, target);
-                    moveSource = "solver";
+                    move = getOptimalMove("upperLayer", "edge", edgeCube, target);
                     console.log("function getOptimalMove:", move);
                     if (move.length > 0){
-                        await executeMove(move, moveSource, map, history, panel, animationDuration, changeBg);
+                        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
                     }
 
                     running = !isUpperKing;
@@ -158,19 +154,17 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     console.log("# back face is the KING");
                     console.log("> REPEAT B until the edge is located between the upper and back faces");
                     
-                    move = getOptimalMove("backLayer", edgeCube, 20)
-                    moveSource = "solver";
+                    move = getOptimalMove("backLayer", "edge", edgeCube, 20)
                     console.log("function getOptimalMove:", move);
                     if (move.length > 0){
-                        await executeMove(move, moveSource, map, history, panel, animationDuration, changeBg);
+                        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
                     }
 
                     if (isKing(backCenter, king, map)){
                         console.log("> then execute: B L U' L'");
 
                         move = ["B", "L", "U'", "L'"]
-                        moveSource = Array(move.length).fill("solver")
-                        await executeMoves(move, moveSource, map, history, panel, animationDuration, changeBg);
+                        await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
                         running = false;
                     }
                 }
@@ -185,16 +179,16 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     console.log("> Execute: D B D'");
                     move = ["D", "B", "D'"]
                 }
-                moveSource = Array(move.length).fill("solver")
-                await executeMoves(move, moveSource, map, history, panel, animationDuration, changeBg);
+                await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
             }
         }
         console.log("~ edge is correctly placed")
         console.log("> Execute z'")
 
         move = "z'";
-        moveSource = "solver";
-        await executeMove(move, moveSource, map, history, panel, animationDuration, changeBg);
+        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
         console.log("\n\n\n")
     }
+
+    await executeMove("x'", "solver", map, history, panel, animationDuration, changeBg);  
 }
