@@ -371,7 +371,7 @@ function swapStickers(sticker, target){
     sticker.color = target.color
 }
 
-export function getOptimalMove(faceName, cubePos, targetPos){
+export function getOptimalMove(faceName, pieceName, cubePos, targetPos){
     let grid;
     let move = faceName[0].toUpperCase();
     for (let i = 0; i < layers.length - 3; i++) {
@@ -384,7 +384,17 @@ export function getOptimalMove(faceName, cubePos, targetPos){
     if (cubePos === targetPos){
         return "";
     }else{
-        let clockwiseTurn = [grid[7], grid[3], grid[1], grid[5]];
+        let clockwiseTurn;
+
+        switch (pieceName) {
+            case "edge":
+                clockwiseTurn = [grid[7], grid[3], grid[1], grid[5]]
+                break;
+            case "corner":
+                clockwiseTurn = [grid[8], grid[6], grid[0], grid[2]]
+                break;
+        }
+
         let index = clockwiseTurn.indexOf(cubePos);
         let count = 0;
 
