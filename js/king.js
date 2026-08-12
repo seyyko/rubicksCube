@@ -81,16 +81,28 @@ function isKing(center, king, map){
     }
 }
 
-export async function kingAlgorithm(map, history, panel=null, animationDuration=0, changeBg=false){
+export async function kingAlgorithm(map, history, panel=null, animationDuration=0, changeBg=false){    
     for (let _ = 0; _ < 4; _++) {
-        const neighbors = [0, 1, 4]
-        const foreigns = [2, 3, 5]
-        const frontCenter = map[0][4]
-        const upperCenter = map[1][4]
-        const backCenter  = map[4][4]
+        const neighbors = [0, 1, 4];
+        const foreigns = [2, 3, 5];
+        const frontCenter = map[0][4];
+        const upperCenter = map[1][4];
+        const backCenter  = map[4][4];
+        const downCenter = map[5][4];
         const frontFace = getFacesByCube(frontCenter.cube)[0];
         const upperFace = getFacesByCube(upperCenter.cube)[0];
         const backFace  = getFacesByCube(backCenter.cube)[0];
+        const downFace = map[5];
+
+        if (
+            downFace[1].faceId === downCenter.faceId
+            && downFace[3].faceId === downCenter.faceId
+            && downFace[5].faceId === downCenter.faceId
+            && downFace[7].faceId === downCenter.faceId
+        ){
+            console.log("testouille, croix déjà faite")
+            return;
+        }
 
         let running = true;
         let edge;
