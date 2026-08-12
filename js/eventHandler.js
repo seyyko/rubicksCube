@@ -90,7 +90,8 @@ async function next(){
 
     const move = algoMoves.shift();
     moveDone.push(move);
-    await executeMove(move, "solver", cubeMap, history, historyPanel, animationDuration, true);
+    await executeMove(move, "solver", cubeMap, history, historyPanel, 0, true); // max speed
+    // await executeMove(move, "solver", cubeMap, history, historyPanel, animationDuration, true);
 }
 
 async function previous(animDur=animationDuration) {
