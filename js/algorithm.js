@@ -1,6 +1,6 @@
 import { cubeMap } from "./cubeMap.js"
 import { executeMoves } from "./cubeRotation.js";
-import { invertedTCase } from "./edgeParking.js";
+import { edgeParking, invertedTCase } from "./edgeParking.js";
 import { kingAlgorithm } from "./king.js"
 
 // resolution algorithm steps:
@@ -30,7 +30,9 @@ export async function algorithm(map){
     // LBL
     await invertedTCase(clonedMap, moves);
 
-    // await executeMoves(moves, "solver", map, history, panel, animationDuration, changeBg)
+    // edgeparking
+    await edgeParking(clonedMap, moves);
 
+    // await executeMoves(moves, "solver", map, history, panel, animationDuration, changeBg)
     return moves;
 }
