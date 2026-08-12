@@ -64,7 +64,6 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
         const rightFace  = getFacesByCube(rightCenter.cube)[0];
         const downFace = getFacesByCube(downCenter.cube)[0];
     
-        let running = true;
         let corner;
         let cornerCube;
         let cornerFaces;
@@ -73,83 +72,80 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
         let moveOrder;
         let upperCornerSticker;
         let downCornerSticker;
-        let loop = 1;
+        let loop;
 
-        while(running){
-            corner = getPieceByFaceId(
-                "corner",
-                [
-                    frontCenter.faceId,
-                    rightCenter.faceId,
-                    downCenter.faceId,
-                ],
-                map);
-            cornerCube = Number(Object.keys(corner)[0]);
-            cornerFaces = getFacesByCube(cornerCube);
+        corner = getPieceByFaceId(
+            "corner",
+            [
+                frontCenter.faceId,
+                rightCenter.faceId,
+                downCenter.faceId,
+            ],
+            map);
+        cornerCube = Number(Object.keys(corner)[0]);
+        cornerFaces = getFacesByCube(cornerCube);
 
-            // if the corner is on the bottom layer :
-            if(cornerFaces.includes(5)){
-                if(cornerFaces.includes(0)){
-                    // the corner contain the front face,
-                    moveOrder = [
-                        ["R", "U", "R'", "U'"],
-                        ["F'", "U'", "F", "U"],
-                    ];
-                }else{
-                    // the corner contain the back face,
-                    moveOrder = [
-                        ["R'", "U'", "R", "U"],
-                        ["F", "U", "F'", "U'"],
-                    ];
-                }
-                if(cornerFaces.includes(2)){
-                    // the corner contain the right face,
-                    move = moveOrder[0];
-                }else{
-                    // the corner contain the left face,
-                    move = moveOrder[1];
-                }
-                // do the Sexy move once to put the corner on the top face
-                await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg)
-            }
-
-            corner = getPieceByFaceId(
-                "corner",
-                [
-                    frontCenter.faceId,
-                    rightCenter.faceId,
-                    downCenter.faceId,
-                ],
-                map);
-            cornerCube = Number(Object.keys(corner)[0]);
-            cornerFaces = getFacesByCube(cornerCube);
-            
-            // once on the top face, we move it until it's between the front, right and upper faces.
-            move = getOptimalMove("upperLayer", "corner", cornerCube, 3);
-            if (move.length > 0){
-                await executeMove(move, "solver", map, history, panel, animationDuration, changeBg)
-            }
-
-            // now that he's correctly placed on the top face, we need to repeat
-            // the Sexy move until he is correctly placed on the bottom face.
-            // without optimisation it's max 5 moves (the pattern return to it's original place every 6 movements)
-            // with optimisation it's only 1 or 3 (2/3 chances of doing 1 movement, 1/3 of doing 3).
-
-            upperCornerSticker = map[1][8].faceId;
-            if(upperCornerSticker === frontCenter.faceId){
-                move = ["U", "R", "U'", "R'"]
-            }else if(upperCornerSticker === rightCenter.faceId){
-                move = ["R", "U", "R'", "U'"]
+        // if the corner is on the bottom layer :
+        if(cornerFaces.includes(5)){
+            if(cornerFaces.includes(0)){
+                // the corner contain the front face,
+                moveOrder = [
+                    ["R", "U", "R'", "U'"],
+                    ["L'", "U'", "L", "U"],
+                ];
             }else{
-                move = ["R", "U", "R'", "U'"]
-                loop = 3;
+                // the corner contain the back face,
+                moveOrder = [
+                    ["R'", "U'", "R", "U"],
+                    ["L", "U", "L'", "U'"],
+                ];
             }
-
-            for (let j = 0; j < loop; j++) {
-                await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg)
+            if(cornerFaces.includes(2)){
+                // the corner contain the right face,
+                move = moveOrder[0];
+            }else{
+                // the corner contain the left face,
+                move = moveOrder[1];
             }
+            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg)
+        }
 
-            running = false;
+        corner = getPieceByFaceId(
+            "corner",
+            [
+                frontCenter.faceId,
+                rightCenter.faceId,
+                downCenter.faceId,
+            ],
+            map);
+        cornerCube = Number(Object.keys(corner)[0]);
+        cornerFaces = getFacesByCube(cornerCube);
+        
+        // once on the top face, we move it until it's between the front, right and upper faces.
+        move = getOptimalMove("upperLayer", "corner", cornerCube, 3);
+        if (move.length > 0){
+            await executeMove(move, "solver", map, history, panel, animationDuration, changeBg)
+        }
+
+        // now that he's correctly placed on the top face, we need to repeat
+        // the Sexy move until he is correctly placed on the bottom face.
+        // without optimisation it's max 5 moves (the pattern return to it's original place every 6 movements)
+        // with optimisation it's only 1 or 3 (2/3 chances of doing 1 movement, 1/3 of doing 3).
+
+        upperCornerSticker = map[1][8].faceId;
+        if(upperCornerSticker === frontCenter.faceId){
+            move = ["U", "R", "U'", "R'"]
+            loop = 1;
+        }else if(upperCornerSticker === rightCenter.faceId){
+            move = ["R", "U", "R'", "U'"]
+            loop = 1;
+        }else{
+            move = ["R", "U", "R'", "U'"]
+            loop = 3;
+        }
+
+        for (let j = 0; j < loop; j++) {
+            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg)
         }
 
         move = "y";
