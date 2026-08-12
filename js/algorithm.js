@@ -33,6 +33,8 @@ export async function algorithm(map){
     // edgeparking
     await edgeParking(clonedMap, moves);
 
+    console.log("length of algo moves:", moves.length)
+
     // await executeMoves(moves, "solver", map, history, panel, animationDuration, changeBg)
     return moves;
 }
