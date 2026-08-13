@@ -12,8 +12,8 @@ import { algorithm } from "./algorithm.js";
 
 const movesButtons = document.querySelectorAll("#controls .moves button");
 
-const resetEL = document.querySelector("#commands .reset");
-const shuffleEl = document.querySelector("#commands .shuffle");
+const resetCubeBtn = document.querySelector("#commands .reset");
+const shuffleCubeBtn = document.querySelector("#commands .shuffle");
 const resolveBtn = document.querySelector("#commands .resolve");
 
 const toolsContainer = document.querySelector("#controls .tools");
@@ -29,7 +29,7 @@ const mainCube = document.getElementById("mainCube");
 
 const popup = document.getElementById("popup");
 
-const solveBtn = document.querySelector(".solve");
+const solveBtn = document.querySelector(".solve button");
 const previousBtn = document.querySelector(".previous");
 const pauseBtn = document.querySelector(".pause");
 const playBtn = document.querySelector(".play");
@@ -123,17 +123,19 @@ movesButtons.forEach(element => {
     });
 });
 
-resetEL.addEventListener("click", () => {
+resetCubeBtn.addEventListener("click", () => {
     resetMap();
     resetHistory(history, historyPanel);
     resetAlgoMoves();
 });
 
-shuffleEl.addEventListener("click", async () => {
+shuffleCubeBtn.addEventListener("click", async () => {
     disableBtns(movesButtons)
+    disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
     resetAlgoMoves();
     await shuffleCube();
     enableBtns(movesButtons) 
+    enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
 });
 
 resolveBtn.addEventListener("click", () => {
@@ -234,6 +236,8 @@ playbackControls.querySelectorAll("button").forEach(element => {
     element.addEventListener("click", async () => {
         const btnName = element.classList[0];
         element.disabled = true;
+        disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+        disableBtns(movesButtons);
         switch (btnName) {
             case "previous":
                 await previous()
@@ -252,14 +256,22 @@ playbackControls.querySelectorAll("button").forEach(element => {
                 break;
         }
         element.disabled = false;
+        enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+        enableBtns(movesButtons);
     })
 });
 
 solveBtn.addEventListener("click", async () => {
     if (algoMoves.length > 0) return;
 
+    disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+    disableBtns(movesButtons);
+
     algoMoves = await algorithm(cubeMap);
     moveDone = [];
+
+    enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+    enableBtns(movesButtons);
 
     if (algoMoves.length > 0) {
         enableBtns(playbackControls.querySelectorAll("button"));
