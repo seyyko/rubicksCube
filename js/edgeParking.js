@@ -42,7 +42,7 @@
 
 import { getFacesByCube, getPieceByFaceId } from "./cubeMap.js";
 import { executeMoves, executeMove, getOptimalMove } from "./cubeRotation.js";
-import { layers } from "./layerHandler.js";
+import { faceToLayer, layers, layerToFace } from "./layerHandler.js";
 
 // The goal is to fill all four edge slots in the upper layer.
 // Once all required edges have been moved there, they can be paired
@@ -54,8 +54,23 @@ import { layers } from "./layerHandler.js";
 
 // Sexy move : R U R' U'
 
+function getSlotState(map, slots, target){
+    let temp = Array();
+    let slotsColors = [
+        [map[1][1].faceId, map[4][7].faceId],
+        [map[1][3].faceId, map[3][1].faceId],
+        [map[1][5].faceId, map[2][1].faceId],
+        [map[1][7].faceId, map[0][1].faceId]
+    ]
+    for (let i = 0; i < slotsColors.length; i++) {
+        temp.push(slotsColors[i].includes(target))
+    }
+    return temp;
+}
+
 export async function invertedTCase(map, history, panel=null, animationDuration=0, changeBg=false){
     for (let i = 0; i < 4; i++) {
+        const upperLayer = map[1]
         const frontCenter = map[0][4]
         const upperCenter = map[1][4]
         const rightCenter  = map[2][4]
@@ -87,8 +102,8 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
         cornerFaces = getFacesByCube(cornerCube);
 
         // if the corner is on the bottom layer :
-        if(cornerFaces.includes(5)){
-            if(cornerFaces.includes(0)){
+        if(cornerFaces.includes(layerToFace["downLayer"])){
+            if(cornerFaces.includes(layerToFace["frontLayer"])){
                 // the corner contain the front face,
                 moveOrder = [
                     ["R", "U", "R'", "U'"],
@@ -101,7 +116,7 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
                     ["L", "U", "L'", "U'"],
                 ];
             }
-            if(cornerFaces.includes(2)){
+            if(cornerFaces.includes(layerToFace["rightLayer"])){
                 // the corner contain the right face,
                 move = moveOrder[0];
             }else{
@@ -133,7 +148,7 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
         // without optimisation it's max 5 moves (the pattern return to it's original place every 6 movements)
         // with optimisation it's only 1 or 3 (2/3 chances of doing 1 movement, 1/3 of doing 3).
 
-        upperCornerSticker = map[1][8].faceId;
+        upperCornerSticker = upperLayer[8].faceId;
         if(upperCornerSticker === frontCenter.faceId){
             move = ["U", "R", "U'", "R'"]
             loop = 1;
@@ -154,22 +169,11 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
     }
 }
 
-function getSlotState(map, slots, target){
-    let temp = Array();
-    let slotsColors = [
-        [map[1][1].faceId, map[4][7].faceId],
-        [map[1][3].faceId, map[3][1].faceId],
-        [map[1][5].faceId, map[2][1].faceId],
-        [map[1][7].faceId, map[0][1].faceId]
-    ]
-    for (let i = 0; i < slotsColors.length; i++) {
-        temp.push(slotsColors[i].includes(target))
-    }
-    return temp;
-}
-
 export async function edgeParking(map, history, panel=null, animationDuration=0, changeBg=false) {
     for (let i = 0; i < 4; i++) {
+        const frontLayer =  map[0]
+        const upperLayer =  map[1]
+        const rightLayer =  map[2]
         const frontCenter = map[0][4]
         const upperCenter = map[1][4]
         const rightCenter  = map[2][4]
@@ -178,32 +182,32 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
         const rightFace  = getFacesByCube(rightCenter.cube)[0];
 
         let move;
-        let edgeSlots = [map[1][1], map[1][3], map[1][5], map[1][7]];
-        let boolEdgeSlots = getSlotState(map, edgeSlots,  map[1][4].faceId);
+        let edgeSlots = [upperLayer[1], upperLayer[3], upperLayer[5], upperLayer[7]];
+        let boolEdgeSlots = getSlotState(map, edgeSlots,  upperLayer[4].faceId);
         let running = true;
         let edgeColors = [
-                map[0][5].faceId,
-                map[2][3].faceId,
+                frontLayer[5].faceId,
+                rightLayer[3].faceId,
             ]
 
         if (
-            boolEdgeSlots.includes(true)                // upper face has empty slot.
-            && !(edgeColors.includes(map[1][4].faceId)) // edge isn't a empty slot.
+            boolEdgeSlots.includes(true)                    // upper face has empty slot.
+            && !(edgeColors.includes(upperLayer[4].faceId)) // edge isn't a empty slot.
             && !(
-                edgeColors.includes(map[0][4].faceId)   // edge isn't already correctly placed.
-                && edgeColors.includes(map[2][4].faceId)
+                edgeColors.includes(frontLayer[4].faceId)   // edge isn't already correctly placed.
+                && edgeColors.includes(rightLayer[4].faceId)
             )
         ){
             // right edge of the front face doesn't have upper face center color (we have to move it).
             // turn the upper face till the 2nd slot is empty.
             while (running){
-                if (boolEdgeSlots[1]){
+                if (boolEdgeSlots[1]){ // 2nd slot.
                     running = false;
                     break;
                 }
                 await executeMove("U", "solver", map, history, panel, animationDuration, changeBg);
-                edgeSlots = [map[1][1], map[1][3], map[1][5], map[1][7]];
-                boolEdgeSlots = getSlotState(map, edgeSlots, map[1][4].faceId);
+                edgeSlots = [upperLayer[1], upperLayer[3], upperLayer[5], upperLayer[7]];
+                boolEdgeSlots = getSlotState(map, edgeSlots, upperCenter.faceId);
             }
             // slot2 is empty, now we put the edge on the upper face.
             move = ["R", "U'", "R'", "U'", "F'", "U", "F"]
@@ -214,6 +218,7 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
     }
 
     for (let i = 0; i < 4; i++) {
+        const upperLayer = map[1];
         const frontCenter = map[0][4]
         const upperCenter = map[1][4]
         const rightCenter  = map[2][4]
@@ -221,11 +226,11 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
         const upperFace = getFacesByCube(upperCenter.cube)[0];
         const rightFace  = getFacesByCube(rightCenter.cube)[0];
         const upperLayerEdgesColors = {
-            20: map[1][1].faceId,
-            10: map[1][3].faceId,
-            12: map[1][5].faceId,
-            2: map[1][7].faceId,
-        }
+            20: upperLayer[1].faceId,
+            10: upperLayer[3].faceId,
+            12: upperLayer[5].faceId,
+            2: upperLayer[7].faceId,
+        };
         const upperLayerCubes = layers[4].grid.map(str => parseInt(str.slice(1)))
         let move;
         let edge;
@@ -235,26 +240,26 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
         let target;
 
         // find the edge that has the front center and right center color.
-        edge = getPieceByFaceId("edge", [frontCenter.faceId, rightCenter.faceId], map)
+        edge = getPieceByFaceId("edge", [frontCenter.faceId, rightCenter.faceId], map);
         edgeCube = Number(Object.keys(edge)[0]);
         if (upperLayerCubes.includes(edgeCube)){
             // if the edge is on the upper face.
             edgeColors = [
                 edge[edgeCube][0].faceId,
                 edge[edgeCube][1].faceId
-            ]
+            ];
             edgeUpperColor = upperLayerEdgesColors[edgeCube];
 
-            target = edgeUpperColor === frontCenter.faceId ? 12 : 2
+            target = edgeUpperColor === frontCenter.faceId ? 12 : 2;
             move = getOptimalMove("upperLayer", "edge", edgeCube, target);
             if (move.length > 0){
-                await executeMove(move, "solver", map, history, panel, animationDuration, changeBg)
+                await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
             }
-            move = target === 12 ? ["U'", "F'", "U", "F", "U", "R", "U'", "R'"] : ["U", "R", "U'", "R'", "U'", "F'", "U", "F"]
+            move = target === 12 ? ["U'", "F'", "U", "F", "U", "R", "U'", "R'"] : ["U", "R", "U'", "R'", "U'", "F'", "U", "F"];
             await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
         }
 
-        move = "y"
+        move = "y";
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
     }
 }
