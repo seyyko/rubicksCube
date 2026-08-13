@@ -42,6 +42,7 @@
 
 import { getFacesByCube, getPieceByFaceId } from "./cubeMap.js";
 import { executeMoves, executeMove, getOptimalMove } from "./cubeRotation.js";
+import { layers } from "./layerHandler.js";
 
 // The goal is to fill all four edge slots in the upper layer.
 // Once all required edges have been moved there, they can be paired
@@ -168,37 +169,6 @@ function getSlotState(map, slots, target){
 }
 
 export async function edgeParking(map, history, panel=null, animationDuration=0, changeBg=false) {
-// EDGE PARKING :
-// Once the first layer is completed, we focus on the edges.
-// We rotate the cube and, at each rotation, check whether the right edge
-// of the front face contains an edge piece that does NOT have the upper-face center color.
-//
-// If it does, we move that edge to the upper layer without disturbing any of the
-// already solved corners.
-//
-// The upper layer has four edge slots. A slot is considered empty when it contains
-// an edge piece with the upper-face color.
-//
-// To insert an edge into the upper layer:
-// - The edge must be located between the front and right faces.
-//   (Since we check this condition at each cube rotation, this should already be true.)
-// - Slot #2 on the upper face must be empty.
-//   If it is not, simply rotate the upper face until slot #2 becomes empty.
-//
-// Example configuration:
-// Front face (edge)
-// [ ] [ ] [ ]
-// [ ] [ ] [e]
-// [ ] [ ] [ ]
-// Right face (edge)
-// [ ] [ ] [ ]
-// [e] [ ] [ ]
-// [ ] [ ] [ ]
-// Upper face (slots)
-// [ ] [1] [ ]
-// [2] [ ] [3]
-// [ ] [4] [ ]
-
     for (let i = 0; i < 4; i++) {
         const frontCenter = map[0][4]
         const upperCenter = map[1][4]
@@ -217,8 +187,12 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
             ]
 
         if (
-            boolEdgeSlots.includes(true)
-            && !(edgeColors.includes(map[1][4].faceId))
+            boolEdgeSlots.includes(true)                // upper face has empty slot.
+            && !(edgeColors.includes(map[1][4].faceId)) // edge isn't a empty slot.
+            && !(
+                edgeColors.includes(map[0][4].faceId)   // edge isn't already correctly placed.
+                && edgeColors.includes(map[2][4].faceId)
+            )
         ){
             // right edge of the front face doesn't have upper face center color (we have to move it).
             // turn the upper face till the 2nd slot is empty.
@@ -235,7 +209,7 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
             move = ["R", "U'", "R'", "U'", "F'", "U", "F"]
             await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
         }
-        move = "y"
+        move = "y";
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
     }
 
@@ -246,7 +220,13 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
         const frontFace = getFacesByCube(frontCenter.cube)[0];
         const upperFace = getFacesByCube(upperCenter.cube)[0];
         const rightFace  = getFacesByCube(rightCenter.cube)[0];
-
+        const upperLayerEdgesColors = {
+            20: map[1][1].faceId,
+            10: map[1][3].faceId,
+            12: map[1][5].faceId,
+            2: map[1][7].faceId,
+        }
+        const upperLayerCubes = layers[4].grid.map(str => parseInt(str.slice(1)))
         let move;
         let edge;
         let edgeCube;
@@ -254,40 +234,25 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
         let edgeUpperColor;
         let target;
 
-        const upperLayerEdgesColors = {
-            20: map[1][1].faceId,
-            10: map[1][3].faceId,
-            12: map[1][5].faceId,
-            2: map[1][7].faceId,
-        }
-
-        edge = getPieceByFaceId("edge", [frontCenter.faceId, rightCenter.faceId], map)
         // find the edge that has the front center and right center color.
-
+        edge = getPieceByFaceId("edge", [frontCenter.faceId, rightCenter.faceId], map)
         edgeCube = Number(Object.keys(edge)[0]);
-        edgeColors = [
-            edge[edgeCube][0].faceId,
-            edge[edgeCube][1].faceId
-        ]
-        edgeUpperColor = upperLayerEdgesColors[edgeCube];
+        if (upperLayerCubes.includes(edgeCube)){
+            // if the edge is on the upper face.
+            edgeColors = [
+                edge[edgeCube][0].faceId,
+                edge[edgeCube][1].faceId
+            ]
+            edgeUpperColor = upperLayerEdgesColors[edgeCube];
 
-        if (edgeUpperColor === frontCenter.faceId){
-            target = 12;
-        }else{
-            target = 2;
+            target = edgeUpperColor === frontCenter.faceId ? 12 : 2
+            move = getOptimalMove("upperLayer", "edge", edgeCube, target);
+            if (move.length > 0){
+                await executeMove(move, "solver", map, history, panel, animationDuration, changeBg)
+            }
+            move = target === 12 ? ["U'", "F'", "U", "F", "U", "R", "U'", "R'"] : ["U", "R", "U'", "R'", "U'", "F'", "U", "F"]
+            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
         }
-
-        move = getOptimalMove("upperLayer", "edge", edgeCube, target);
-        if (move.length > 0){
-            await executeMove(move, "solver", map, history, panel, animationDuration, changeBg)
-        }
-
-        if (target === 12){
-            move = ["U'", "F'", "U", "F", "U", "R", "U'", "R'"]
-        }else{
-            move = ["U", "R", "U'", "R'", "U'", "F'", "U", "F"]
-        }
-        await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
 
         move = "y"
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
