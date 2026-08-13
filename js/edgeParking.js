@@ -196,6 +196,7 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
             && !(
                 edgeColors.includes(frontLayer[4].faceId)   // edge isn't already correctly placed.
                 && edgeColors.includes(rightLayer[4].faceId)
+                && frontLayer[5].faceId === frontCenter.faceId
             )
         ){
             // right edge of the front face doesn't have upper face center color (we have to move it).
