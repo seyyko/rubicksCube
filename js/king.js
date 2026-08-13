@@ -100,7 +100,6 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
             && downFace[5].faceId === downCenter.faceId
             && downFace[7].faceId === downCenter.faceId
         ){
-            console.log("testouille, croix déjà faite")
             return;
         }
 
