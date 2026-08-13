@@ -52,7 +52,8 @@
 #controls .tools .playbackControls button:active,
 #controls .tools .resetColor button:active,
 #controls .tools .resetPos button:active,
-#controls .tools .solve button:active{
+#controls .tools .solve button:active,
+#commands button:active{
     background-color: rgba(34, 34, 34, 1);
 }
 
@@ -60,7 +61,8 @@
 #controls .tools .playbackControls button:disabled,
 #controls .tools .resetColor button:disabled,
 #controls .tools .resetPos button:disabled,
-#controls .tools .solve button:disabled{
+#controls .tools .solve button:disabled,
+#commands button:disabled{
     background-color: rgba(34, 34, 34, 1);
 }
 
@@ -228,10 +230,6 @@
     font-size: 2em;
 
     background-color: rgba(34, 34, 34, 0.2);
-}
-
-#commands button:active{
-    background-color: rgba(34, 34, 34, 1);
 }
 
 #commands .reset{
