@@ -303,6 +303,10 @@ function checkForTriple(history, panel, moveSource){
             removeMove(history, 2, panel);
             addMove(opposite[move], moveSource, history, panel);
         }
+        if (move[1] === "2" && lastMove === opposite[move[0]]){
+            removeMove(history, 2, panel, moveSource)
+            addMove(move[0], moveSource, history, panel);
+        }
     }
 }
 
