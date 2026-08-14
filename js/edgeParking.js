@@ -54,7 +54,7 @@ import { faceToLayer, layers, layerToFace } from "./layerHandler.js";
 
 // Sexy move : R U R' U'
 
-function getSlotState(map, slots, target){
+export function getSlotState(map, target){
     let temp = Array();
     let slotsColors = [
         [map[1][1].faceId, map[4][7].faceId],
@@ -182,8 +182,7 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
         const rightFace  = getFacesByCube(rightCenter.cube)[0];
 
         let move;
-        let edgeSlots = [upperLayer[1], upperLayer[3], upperLayer[5], upperLayer[7]];
-        let boolEdgeSlots = getSlotState(map, edgeSlots,  upperLayer[4].faceId);
+        let boolEdgeSlots = getSlotState(map, upperLayer[4].faceId);
         let running = true;
         let edgeColors = [
                 frontLayer[5].faceId,
@@ -207,8 +206,7 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
                     break;
                 }
                 await executeMove("U", "solver", map, history, panel, animationDuration, changeBg);
-                edgeSlots = [upperLayer[1], upperLayer[3], upperLayer[5], upperLayer[7]];
-                boolEdgeSlots = getSlotState(map, edgeSlots, upperCenter.faceId);
+                boolEdgeSlots = getSlotState(map, upperCenter.faceId);
             }
             // slot2 is empty, now we put the edge on the upper face.
             move = ["R", "U'", "R'", "U'", "F'", "U", "F"]
