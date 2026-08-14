@@ -3,7 +3,7 @@ import { cubeMap, getPieceByFaceId } from "./cubeMap.js"
 import { algorithm } from "./algorithm.js"
 import { renderMap } from "./cubeRenderer.js"
 import { createMoves } from "./history.js"
-import { kingAlgorithm } from "./king.js"
+import { kingAlgorithm } from "./algoKing.js"
 
 export const history = Array();
 export const historyPanel = document.getElementById("history");
