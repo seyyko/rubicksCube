@@ -25,15 +25,16 @@ export async function algorithm(map){
     let clonedMap = cloneMap(map);
     const moves = Array();
 
-    // cross
+    // king
     await kingAlgorithm(clonedMap, moves);
 
-    // LBL
+    // first layer
     await invertedTCase(clonedMap, moves);
 
-    // edgeparking
+    // edgeParking
     await edgeParking(clonedMap, moves);
 
+    // upper cross
     await upperCross(clonedMap, moves);
 
     console.log("length of algo moves:", moves.length)
