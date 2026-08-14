@@ -1,7 +1,8 @@
 import { cubeMap } from "./cubeMap.js"
 import { executeMoves } from "./cubeRotation.js";
-import { edgeParking, invertedTCase } from "./edgeParking.js";
-import { kingAlgorithm } from "./king.js"
+import { edgeParking, invertedTCase } from "./algoEdgeParking.js";
+import { kingAlgorithm } from "./algoKing.js"
+import { upperCross } from "./algoUpperCross.js";
 
 // resolution algorithm steps:
 // 1. white cross
@@ -32,6 +33,8 @@ export async function algorithm(map){
 
     // edgeparking
     await edgeParking(clonedMap, moves);
+
+    await upperCross(clonedMap, moves);
 
     console.log("length of algo moves:", moves.length)
 
