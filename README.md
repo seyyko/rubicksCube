@@ -11,5 +11,4 @@ Simulateur de Rubik's Cube 3D développé en HTML, CSS et JavaScript.
 - [x] Contrôles de lecture
 - [x] Personnalisation des couleurs
 - [ ] Personnalisation des stickers / scan IRL
-- [x] Résolution de la croix
-- [ ] Résolution complète
+- [ ] Résolution complète (4/7)
