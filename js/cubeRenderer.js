@@ -9,7 +9,7 @@ function getLineColor(list=null, y=0){
         // Convert the face ID into its color abbreviation
         // (W, O, B, G, Y, R).
         // When no face is provided, use "|" as padding.
-        let abbreviatedColor = list ? colors[list[i+(3 * y)].faceId].abbreviatedColor : "|";
+        let abbreviatedColor = list ? colors[list[i+(3 * y)].colorId].abbreviatedColor : "|";
         m += `${abbreviatedColor} `;
     } return m
 }
