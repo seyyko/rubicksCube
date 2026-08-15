@@ -281,7 +281,7 @@ function rotateFace(face, direction){
     for (let i = 0; i < face.length; i++) {
         faceTemp.push({
             "color": face[i].color,
-            "faceId": face[i].faceId,
+            "colorId": face[i].colorId,
         })        
     }
 
@@ -320,19 +320,19 @@ function rotateSides(side1, side2, side3, side4, sideIndex, direction){
 
         faceTemp1.push({
             "color": side1[sideIndex1[clockwiseIndex] - 1].color,
-            "faceId": side1[sideIndex1[clockwiseIndex] - 1].faceId
+            "colorId": side1[sideIndex1[clockwiseIndex] - 1].colorId
         });
         faceTemp2.push({
             "color": side2[sideIndex2[counterClockwiseIndex] - 1].color,
-            "faceId": side2[sideIndex2[counterClockwiseIndex] - 1].faceId
+            "colorId": side2[sideIndex2[counterClockwiseIndex] - 1].colorId
         });
         faceTemp3.push({
             "color": side3[sideIndex3[clockwiseIndex] - 1].color,
-            "faceId": side3[sideIndex3[clockwiseIndex] - 1].faceId
+            "colorId": side3[sideIndex3[clockwiseIndex] - 1].colorId
         });
         faceTemp4.push({
             "color": side4[sideIndex4[counterClockwiseIndex] - 1].color,
-            "faceId": side4[sideIndex4[counterClockwiseIndex] - 1].faceId
+            "colorId": side4[sideIndex4[counterClockwiseIndex] - 1].colorId
         });
     }
 
@@ -367,7 +367,7 @@ function swapIndex(list, newIndex){
 function swapStickers(sticker, target){
     // Only sticker data is exchanged.
     // Cube positions remain unchanged.
-    sticker.faceId = target.faceId
+    sticker.colorId = target.colorId
     sticker.color = target.color
 }
 
