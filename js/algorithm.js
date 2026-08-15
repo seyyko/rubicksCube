@@ -5,12 +5,13 @@ import { kingAlgorithm } from "./algoKing.js"
 import { upperCross } from "./algoUpperCross.js";
 
 // resolution algorithm steps:
-// 1. white cross
-// 2. LBL
-// 3. yellow cross
-// 4. matching yellow cross sides
-// 5. matching yellow corner
-// 6. final moveset
+// 1. down cross
+// 2. first layer
+// 3. second layer
+// 4. upper cross
+// 5. matching upper cross sides
+// 6. matching upper corner
+// 7. final moveset
 
 function cloneMap(map){
     return map.map(face =>
