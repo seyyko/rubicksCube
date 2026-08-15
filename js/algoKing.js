@@ -63,7 +63,7 @@ function whoIsKing(map, edgeFaces, edgeCube, frontCenter){
     let king;
     for (let i = 0; i < map[edgeFaces[0]].length; i++) {
         if (map[edgeFaces[0]][i].cube === edgeCube){
-            if (map[edgeFaces[0]][i].faceId === frontCenter.faceId){
+            if (map[edgeFaces[0]][i].colorId === frontCenter.colorId){
                 king = edgeFaces[1]
             } else{
                 king = edgeFaces[0]
@@ -95,10 +95,10 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
         const downFace = map[5];
 
         if (
-            downFace[1].faceId === downCenter.faceId
-            && downFace[3].faceId === downCenter.faceId
-            && downFace[5].faceId === downCenter.faceId
-            && downFace[7].faceId === downCenter.faceId
+            downFace[1].colorId === downCenter.colorId
+            && downFace[3].colorId === downCenter.colorId
+            && downFace[5].colorId === downCenter.colorId
+            && downFace[7].colorId === downCenter.colorId
         ){
             return;
         }
@@ -114,7 +114,7 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
 
         console.log("\n")
         while(running){
-            edge = getPieceByFaceId("edge", [frontCenter.faceId, upperCenter.faceId], map)
+            edge = getPieceByFaceId("edge", [frontCenter.colorId, upperCenter.colorId], map)
             edgeCube = Number(Object.keys(edge)[0])
             edgeFaces = getFacesByCube(edgeCube)
 
