@@ -8,10 +8,10 @@ import { executeMove, executeMoves } from "./cubeRotation.js";
 
 function getNeighbors(face, centerFaceId){
     const neighbors = [
-        face[1].faceId, 
-        face[3].faceId, 
-        face[5].faceId, 
-        face[7].faceId];
+        face[1].colorId, 
+        face[3].colorId, 
+        face[5].colorId, 
+        face[7].colorId];
     return neighbors.map(color => centerFaceId === color);
 }
 
@@ -40,7 +40,7 @@ function isNeighborsAlined(face, centerFaceId){
 export async function upperCross(map, history, panel=null, animationDuration=0, changeBg=false){
     const upperLayer = map[1];
     const upperCenter = upperLayer[4];
-    const upperCenterColor = upperCenter.faceId;
+    const upperCenterColor = upperCenter.colorId;
     let move;
     let neighbors = getNeighbors(upperLayer, upperCenterColor);
     let neighborsCount = countNeighbors(neighbors);
