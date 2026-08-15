@@ -57,7 +57,7 @@ function initMap(){
     for (let i = 0; i < 6; i++) {
         tempMap.push(Array.from({ length: 9 }, () => ({
             "color": colors[i],
-            "faceId": i
+            "colorId": i
         })));      
     }
 
@@ -133,7 +133,7 @@ export function updateBackground(map, changeObj){
     // current color configuration.
     for (let i = 0; i < 6; i++) {
         for (let j = 0; j < 9; j++) {
-            map[i][j].color = colors[map[i][j].faceId].color
+            map[i][j].color = colors[map[i][j].colorId].color
             if (changeObj){
                 map[i][j].obj.style.backgroundColor = map[i][j].color
             }
@@ -142,9 +142,9 @@ export function updateBackground(map, changeObj){
 }
 
 export function getPieceByFaceId(piece, faceIds, map){
-    // We get pieces by faceId and not color,
+    // We get pieces by colorId and not color,
     // cause user can make every face the same color
-    // however faceId is unique to the face and can't be changed.
+    // however colorId is unique to the face and can't be changed.
     const temp = Array();
     let pieces;
     let cubeDict;
@@ -154,7 +154,7 @@ export function getPieceByFaceId(piece, faceIds, map){
         for (let i = 0; i < element.length; i++) {
             // for all pieces (56) we get those who match:
             if (element[i].piece == piece &&          // Matches the requested piece type,
-                faceIds.includes(element[i].faceId)){ // and one of the requested face IDs.
+                faceIds.includes(element[i].colorId)){ // and one of the requested face IDs.
                 temp.push(element[i])
             }
             cubeDict = {};
@@ -201,6 +201,18 @@ export function getFacesByCube(cube){
     }
     // should return an Array which contains
     // min 1, max 3 integers (faces).
+    return temp;
+}
+
+export function getStickersByCube(map, cube){
+    const temp = Array();
+    for (let i = 0; i < map.length; i++) {
+        for (let j = 0; j < map[i].length; j++) {
+            if (map[i][j].cube === cube){
+                temp.push(map[i][j]);
+            }            
+        }
+    }
     return temp;
 }
 
