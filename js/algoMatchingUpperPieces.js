@@ -26,6 +26,32 @@ function howManyEdgePlaced(edgeStickers, faces){
     return [count, boolCount];
 }
 
+function sortCornerColor(cornersSticker, crossColor){
+    for (let i = 0; i < cornersSticker.length; i++) {
+        cornersSticker[i] = cornersSticker[i].filter(
+            sticker => sticker.colorId !== crossColor
+        );
+    }
+}
+
+function howManyCornerPlaced(cornersStickers, faces){
+    let count = 0;
+    let boolCount = Array();
+    for (let i = 0; i < 4; i++) {
+        if (
+            faces[i].includes(cornersStickers[i][0].colorId) &&
+            faces[i].includes(cornersStickers[i][1].colorId)
+        ){
+            count++
+        }
+        boolCount.push(
+            faces[i].includes(cornersStickers[i][0].colorId) &&
+            faces[i].includes(cornersStickers[i][1].colorId)
+        );
+    }
+    return [count, boolCount];
+}
+
 function areEdgesTouching(boolCount){
     if (
         (boolCount[1] && boolCount[2]) ||
@@ -34,6 +60,50 @@ function areEdgesTouching(boolCount){
         return false;
     }
     return true;
+}
+
+function getFacesColors(map) {
+    return {
+        upper: map[1][4].colorId,
+        front: map[0][4].colorId,
+        right: map[2][4].colorId,
+        left: map[3][4].colorId,
+        back: map[4][4].colorId
+    };
+}
+
+function getEdgeData(map, edgesCube) {
+    const facesColors = getFacesColors(map);
+
+    const edgesStickers = edgesCube.map(
+        cube => getStickersByCube(map, cube)
+    );
+
+    sortEdgeColor(edgesStickers, facesColors.upper);
+
+    return howManyEdgePlaced(edgesStickers, [
+        facesColors.back,
+        facesColors.left,
+        facesColors.right,
+        facesColors.front
+    ]);
+}
+
+function getCornerData(map, cornersCube) {
+    const facesColors = getFacesColors(map);
+
+    const cornersStickers = cornersCube.map(
+        corner => getStickersByCube(map, corner)
+    );
+
+    sortCornerColor(cornersStickers, facesColors.upper);
+
+    return howManyCornerPlaced(cornersStickers, [
+        [facesColors.front, facesColors.right],
+        [facesColors.right, facesColors.back],
+        [facesColors.back, facesColors.left],
+        [facesColors.left, facesColors.front]
+    ]);
 }
 
 export async function matchingUpperEdges(map, history, panel=null, animationDuration=0, changeBg=false){
@@ -52,33 +122,15 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
     const leftLayer = map[3];
     const backLayer = map[4];
 
-    const edgesCubes = [20, 10, 12, 2]
+    const edgesCube = [20, 10, 12, 2]
     const frontEdgeCubesId = 3;
 
-    let upperFaceColor = upperLayer[4].colorId;
-    let frontFaceColor = frontLayer[4].colorId;
-    let rightFaceColor = rightLayer[4].colorId;
-    let leftFaceColor = leftLayer[4].colorId;
-    let backFaceColor = backLayer[4].colorId;
-
     let move;
-    let edgesStickers;
-    let edgesPlacedData;
     let count;
     let boolCount;
     let edgeTouching;
 
-    edgesStickers = edgesCubes.map(cube => getStickersByCube(map, cube));
-    sortEdgeColor(edgesStickers, upperFaceColor);
-    edgesPlacedData = howManyEdgePlaced(edgesStickers, 
-    [
-        backFaceColor,
-        leftFaceColor,
-        rightFaceColor,
-        frontFaceColor
-    ]);
-    count = edgesPlacedData[0];
-
+    [count, boolCount] = getEdgeData(map, edgesCube);
     
     console.log("#matchingUpperEdges# how many edges are placed ?", count);
 
@@ -86,24 +138,16 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
         move = "U";
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
         
-        edgesStickers = edgesCubes.map(cube => getStickersByCube(map, cube));
-        sortEdgeColor(edgesStickers, upperFaceColor);
-        edgesPlacedData = howManyEdgePlaced(edgesStickers, 
-        [
-            backFaceColor,
-            leftFaceColor,
-            rightFaceColor,
-            frontFaceColor
-        ]);
-        count = edgesPlacedData[0];
+        [count, boolCount] = getEdgeData(map, edgesCube);
         console.log("#matchingUpperEdges# (loop) how many edges are placed ?", count);
     }
 
+    // all edges are already correctly placed.
     if (count === 4){
         return;
     }
 
-    boolCount = edgesPlacedData[1]
+    [count, boolCount] = getEdgeData(map, edgesCube);
 
     console.log("#matchingUpperEdges# final count (should be 2):", count);
     console.log("#matchingUpperEdges# boolCount (array):", boolCount);
@@ -119,23 +163,8 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
         ){
             move = "y";
             await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
-            
-            frontFaceColor = frontLayer[4].colorId;
-            rightFaceColor = rightLayer[4].colorId;
-            leftFaceColor = leftLayer[4].colorId;
-            backFaceColor = backLayer[4].colorId;
 
-            edgesStickers = edgesCubes.map(cube => getStickersByCube(map, cube));
-            sortEdgeColor(edgesStickers, upperFaceColor);
-            edgesPlacedData = howManyEdgePlaced(edgesStickers, 
-            [
-                backFaceColor,
-                leftFaceColor,
-                rightFaceColor,
-                frontFaceColor
-            ]);
-
-            boolCount = edgesPlacedData[1];
+            [count, boolCount] = getEdgeData(map, edgesCube);
         }
         console.log("#matchingUpperEdges# edges are correctly placed.");
         console.log("#matchingUpperEdges# do: algorithm + y' + algorithm again.");
@@ -148,23 +177,8 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
         ){
             move = "y";
             await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
-            
-            frontFaceColor = frontLayer[4].colorId;
-            rightFaceColor = rightLayer[4].colorId;
-            leftFaceColor = leftLayer[4].colorId;
-            backFaceColor = backLayer[4].colorId;
 
-            edgesStickers = edgesCubes.map(cube => getStickersByCube(map, cube));
-            sortEdgeColor(edgesStickers, upperFaceColor);
-            edgesPlacedData = howManyEdgePlaced(edgesStickers, 
-            [
-                backFaceColor,
-                leftFaceColor,
-                rightFaceColor,
-                frontFaceColor
-            ]);
-
-            boolCount = edgesPlacedData[1];
+            [count, boolCount] = getEdgeData(map, edgesCube);
         }
         console.log("#matchingUpperEdges# edges are correctly placed.");
         console.log("#matchingUpperEdges# do: algorithm");
@@ -175,4 +189,52 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
     console.log("#matchingUpperEdges# finish with 'U'.");
     move = "U";
     await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+}
+
+
+export async function matchingUpperCorners(map, history, panel=null, animationDuration=0, changeBg=false){
+    // algorithm : L' U R U' L U R' U'
+    // do 'y' 4 times,
+    // each time see if the corner between the front and right face
+    // is correctly placed.
+    // 2 case:
+    // none are correctly placed -> do algorithm on any face (create a corner).
+    // at least one is correctly placed -> do the algorithm while the corner is between the front and right face.
+    
+    const upperLayer = map[1];
+    const frontLayer = map[0];
+    const rightLayer = map[2];
+    const leftLayer = map[3];
+    const backLayer = map[4];
+    const cornersCube = [3, 21, 19, 1];
+
+    let move;
+    let count;
+    let boolCount;
+
+    [count, boolCount] = getCornerData(map, cornersCube);
+
+    console.log("#matchingUpperCorner#: how many corner are correctly placed ?", count);
+    console.log("#matchingUpperCorner#: boolean list of those corners:", boolCount);
+    while (count < 4){
+        console.log("#matchingUpperCorner#: (in loop) is there at least one corner correctly placed ?", count > 0);
+        if (count){
+            console.log("#matchingUpperCorner#: do 'y' until the corner is between the front and right faces.");
+            while (!boolCount[0]){
+                move = "y";
+                await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                [count, boolCount] = getCornerData(map, cornersCube);
+            }
+            console.log("#matchingUpperCorner#: corner is correctly placed.");
+            console.log("#matchingUpperCorner#: execute the algorithm.");
+            move = ["L'", "U", "R", "U'", "L", "U", "R'", "U'"];
+            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            [count, boolCount] = getCornerData(map, cornersCube);
+        }else{
+            console.log("#matchingUpperCorner#: no corner are correctly placed, then do the algorithm (to create a corner).");
+            move = ["L'", "U", "R", "U'", "L", "U", "R'", "U'"];
+            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            [count, boolCount] = getCornerData(map, cornersCube);
+        }
+    }
 }
