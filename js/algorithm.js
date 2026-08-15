@@ -3,7 +3,7 @@ import { executeMoves } from "./cubeRotation.js";
 import { edgeParking, invertedTCase } from "./algoEdgeParking.js";
 import { kingAlgorithm } from "./algoKing.js"
 import { upperCross } from "./algoUpperCross.js";
-import { matchingUpperEdges } from "./algoMatchingUpperPieces.js";
+import { matchingUpperCorners, matchingUpperEdges } from "./algoMatchingUpperPieces.js";
 
 // resolution algorithm steps:
 // 1. down cross
@@ -42,8 +42,11 @@ export async function algorithm(map){
     // matching upper edges
     await matchingUpperEdges(clonedMap, moves);
 
+    // matching upper corners
+    await matchingUpperCorners(clonedMap, moves)
+
+    // 
     console.log("length of algo moves:", moves.length)
 
-    // await executeMoves(moves, "solver", map, history, panel, animationDuration, changeBg)
     return moves;
 }
