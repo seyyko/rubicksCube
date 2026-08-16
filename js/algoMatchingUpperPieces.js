@@ -8,11 +8,33 @@ import { executeMove, executeMoves } from "./cubeRotation.js";
 // get center of front right back and left
 // do U until 2 edges are correctly placed.
 
+export function getFacesColors(map) {
+    const temp = {};
+    const facesName = ["front", "upper", "right", "left", "back", "down"];
+    const centerId = 4;
+    const botCenterId = [7, 7, 7, 7, 1];
+    for (let i = 0; i < 6; i++) {
+        temp[`${facesName[i]}Center`] = map[i][centerId].colorId
+        if (botCenterId[i]){
+            temp[`${facesName[i]}BotCenter`] = map[i][botCenterId[i]].colorId
+        }
+    }
+    return temp
+}
+
 function sortEdgeColor(edgesStickers, crossColor){
     for (let i = 0; i < edgesStickers.length; i++) {
         edgesStickers[i] = edgesStickers[i].filter(
             sticker => sticker.colorId !== crossColor
         )[0];
+    }
+}
+
+function sortCornerColor(cornersSticker, crossColor){
+    for (let i = 0; i < cornersSticker.length; i++) {
+        cornersSticker[i] = cornersSticker[i].filter(
+            sticker => sticker.colorId !== crossColor
+        );
     }
 }
 
@@ -24,14 +46,6 @@ function howManyEdgePlaced(edgeStickers, faces){
         boolCount.push(edgeStickers[i].colorId === faces[i]);
     }
     return [count, boolCount];
-}
-
-function sortCornerColor(cornersSticker, crossColor){
-    for (let i = 0; i < cornersSticker.length; i++) {
-        cornersSticker[i] = cornersSticker[i].filter(
-            sticker => sticker.colorId !== crossColor
-        );
-    }
 }
 
 function howManyCornerPlaced(cornersStickers, faces){
@@ -62,48 +76,35 @@ function areEdgesTouching(boolCount){
     return true;
 }
 
-function getFacesColors(map) {
-    return {
-        upper: map[1][4].colorId,
-        front: map[0][4].colorId,
-        right: map[2][4].colorId,
-        left: map[3][4].colorId,
-        back: map[4][4].colorId
-    };
-}
-
-function getEdgeData(map, edgesCube) {
+function getEdgeData(map, edgesCube, target) {
     const facesColors = getFacesColors(map);
 
     const edgesStickers = edgesCube.map(
         cube => getStickersByCube(map, cube)
     );
 
-    sortEdgeColor(edgesStickers, facesColors.upper);
+    sortEdgeColor(edgesStickers, target);
 
     return howManyEdgePlaced(edgesStickers, [
-        facesColors.back,
-        facesColors.left,
-        facesColors.right,
-        facesColors.front
+        facesColors.backCenter,
+        facesColors.leftCenter,
+        facesColors.rightCenter,
+        facesColors.frontCenter
     ]);
 }
 
-function getCornerData(map, cornersCube) {
+function getCornerData(map, cornersCube, target, faces) {
     const facesColors = getFacesColors(map);
 
     const cornersStickers = cornersCube.map(
         corner => getStickersByCube(map, corner)
     );
 
-    sortCornerColor(cornersStickers, facesColors.upper);
+    sortCornerColor(cornersStickers, target);
 
-    return howManyCornerPlaced(cornersStickers, [
-        [facesColors.front, facesColors.right],
-        [facesColors.right, facesColors.back],
-        [facesColors.back, facesColors.left],
-        [facesColors.left, facesColors.front]
-    ]);
+    const colors = faces.map(face => face.map(name => facesColors[name]));
+
+    return howManyCornerPlaced(cornersStickers, colors);
 }
 
 export async function matchingUpperEdges(map, history, panel=null, animationDuration=0, changeBg=false){
@@ -125,12 +126,13 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
     const edgesCube = [20, 10, 12, 2]
     const frontEdgeCubesId = 3;
 
+    let facesColors = getFacesColors(map);
     let move;
     let count;
     let boolCount;
     let edgeTouching;
 
-    [count, boolCount] = getEdgeData(map, edgesCube);
+    [count, boolCount] = getEdgeData(map, edgesCube, facesColors.upperCenter);
     
     console.log("#matchingUpperEdges# how many edges are placed ?", count);
 
@@ -138,7 +140,8 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
         move = "U";
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
         
-        [count, boolCount] = getEdgeData(map, edgesCube);
+        facesColors = getFacesColors(map);
+        [count, boolCount] = getEdgeData(map, edgesCube, facesColors.upperCenter);
         console.log("#matchingUpperEdges# (loop) how many edges are placed ?", count);
     }
 
@@ -147,7 +150,8 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
         return;
     }
 
-    [count, boolCount] = getEdgeData(map, edgesCube);
+    facesColors = getFacesColors(map);
+    [count, boolCount] = getEdgeData(map, edgesCube, facesColors.upperCenter);
 
     console.log("#matchingUpperEdges# final count (should be 2):", count);
     console.log("#matchingUpperEdges# boolCount (array):", boolCount);
@@ -164,7 +168,8 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
             move = "y";
             await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
 
-            [count, boolCount] = getEdgeData(map, edgesCube);
+                facesColors = getFacesColors(map);
+                [count, boolCount] = getEdgeData(map, edgesCube, facesColors.upperCenter);
         }
         console.log("#matchingUpperEdges# edges are correctly placed.");
         console.log("#matchingUpperEdges# do: algorithm + y' + algorithm again.");
@@ -178,7 +183,8 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
             move = "y";
             await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
 
-            [count, boolCount] = getEdgeData(map, edgesCube);
+            facesColors = getFacesColors(map);
+            [count, boolCount] = getEdgeData(map, edgesCube, facesColors.upperCenter);
         }
         console.log("#matchingUpperEdges# edges are correctly placed.");
         console.log("#matchingUpperEdges# do: algorithm");
@@ -207,12 +213,19 @@ export async function matchingUpperCorners(map, history, panel=null, animationDu
     const leftLayer = map[3];
     const backLayer = map[4];
     const cornersCube = [3, 21, 19, 1];
+    const facesOrder = [
+        ["frontCenter", "rightCenter"],
+        ["rightCenter", "backCenter"],
+        ["backCenter", "leftCenter"],
+        ["leftCenter", "frontCenter"]
+    ];
 
+    let facesColors = getFacesColors(map);
     let move;
     let count;
     let boolCount;
 
-    [count, boolCount] = getCornerData(map, cornersCube);
+    [count, boolCount] = getCornerData(map, cornersCube, facesColors.upperCenter, facesOrder);
 
     console.log("#matchingUpperCorner#: how many corner are correctly placed ?", count);
     console.log("#matchingUpperCorner#: boolean list of those corners:", boolCount);
@@ -223,18 +236,27 @@ export async function matchingUpperCorners(map, history, panel=null, animationDu
             while (!boolCount[0]){
                 move = "y";
                 await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
-                [count, boolCount] = getCornerData(map, cornersCube);
+                
+                facesColors = getFacesColors(map);
+                [count, boolCount] = getCornerData(map, cornersCube, facesColors.upperCenter, facesOrder);
             }
             console.log("#matchingUpperCorner#: corner is correctly placed.");
             console.log("#matchingUpperCorner#: execute the algorithm.");
             move = ["L'", "U", "R", "U'", "L", "U", "R'", "U'"];
             await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
-            [count, boolCount] = getCornerData(map, cornersCube);
+            
+            facesColors = getFacesColors(map);
+            [count, boolCount] = getCornerData(map, cornersCube, facesColors.upperCenter, facesOrder);
         }else{
             console.log("#matchingUpperCorner#: no corner are correctly placed, then do the algorithm (to create a corner).");
             move = ["L'", "U", "R", "U'", "L", "U", "R'", "U'"];
             await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
-            [count, boolCount] = getCornerData(map, cornersCube);
+            
+            facesColors = getFacesColors(map);
+            [count, boolCount] = getCornerData(map, cornersCube, facesColors.upperCenter, facesOrder);
         }
     }
+    console.log("#matchingUpperCorner#: finish with 'x2' to turn the cube.");
+    move = "x2";
+    await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
 }
