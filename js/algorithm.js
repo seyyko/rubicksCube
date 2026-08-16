@@ -4,6 +4,7 @@ import { edgeParking, invertedTCase } from "./algoEdgeParking.js";
 import { kingAlgorithm } from "./algoKing.js"
 import { upperCross } from "./algoUpperCross.js";
 import { matchingUpperCorners, matchingUpperEdges } from "./algoMatchingUpperPieces.js";
+import { finalMove } from "./algoFinalMove.js";
 
 // resolution algorithm steps:
 // 1. down cross
@@ -44,6 +45,9 @@ export async function algorithm(map){
 
     // matching upper corners
     await matchingUpperCorners(clonedMap, moves)
+
+    // final move set
+    await finalMove(clonedMap, moves);
 
     // 
     console.log("length of algo moves:", moves.length)
