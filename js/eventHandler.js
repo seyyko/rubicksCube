@@ -75,7 +75,9 @@ async function play(){
 
     while (algoMoves.length > 0 && !isPaused) {
         await next()
-        await wait(solvingDelay)
+        await wait(
+            solvingDelay <= animationDuration ? 0 : solvingDelay - animationDuration
+        ) // min 0 max .8s
     }
 
     isPlaying = false;
@@ -90,7 +92,10 @@ async function next(){
 
     const move = algoMoves.shift();
     moveDone.push(move);
-    await executeMove(move, "solver", cubeMap, history, historyPanel, animationDuration, true);
+    await executeMove(move, "solver", cubeMap, history, historyPanel,
+        solvingDelay < animationDuration ? solvingDelay : animationDuration,
+        true); // min 0 max .2
+
 }
 
 async function previous(animDur=animationDuration) {
