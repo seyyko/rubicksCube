@@ -32,44 +32,47 @@ export async function finalMove(map, history, panel=null, animationDuration=0, c
     let corners;
     let count;
 
-    console.log("testouille1:");
     corners = cornersCube.map(cube => isCornerPlaced(map, cube, 5, facesColors.downCenter))
     count = corners.filter(Boolean).length;
-    console.log("testouille2:", corners, count);
+    console.log("#finalMoveSet#: corners list:", corners);
 
     while (count < 4){
-        console.log("testouille: combien bien placé ?", count)
-        console.log("testouille: coin bien placé ?", corners[0])
+        console.log("#finalMoveSet#: how many corners are in good position ?", count)
+        console.log("#finalMoveSet#: is the current corner is in good position ?", corners[0])
         if (!corners[0]){
+            console.log("#finalMoveSet#: the current corner isn't in a good position.");
             if (getAlgoDirection(map,facesColors.downCenter)){
-                console.log("testouille: le sticker de la couleur du bas est a droite.");
+                console.log("#finalMoveSet#: sticker that contain the down face color is on the right.");
+                console.log("#finalMoveSet#: the algorithm is 2 Sexy move (R U R' U').");
                 move = ["R", "U", "R'", "U'", "R", "U", "R'", "U'"];
             }else{
-                console.log("testouille: le sticker de la couleur du bas est a gauche.");
+                console.log("#finalMoveSet#: sticker that contain the down face color is on the left.");
+                console.log("#finalMoveSet#: the algorithm is 2 reversed Sexy move (U R U' R').");
                 move = ["U", "R", "U'", "R'", "U", "R", "U'", "R'"];
             }
             await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
         }
-        console.log("testouille: on execute D' et on recommence.");
+        console.log("#finalMoveSet#: do D' then, we check the next corner.");
         move = "D'";
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
         
         facesColors = getFacesColors(map);
         corners = cornersCube.map(cube => isCornerPlaced(map, cube, 5, facesColors.downCenter))
         count = corners.filter(Boolean).length;
+        console.log("#finalMoveSet#: corners list:", corners);
     }
 
-    console.log("testouille: on finis par tourner la face du bas jusqu'à l'alignement.");
+    console.log("#finalMoveSet#: we finish by turning the down face until the cube is done.");
 
     while (
         !(facesColors.frontBotCenter === facesColors.frontCenter)
     )
     {
-        console.log("testouille: aligné ?", facesColors.frontBotCenter === facesColors.frontCenter);
+        console.log("#finalMoveSet#: down face aligned ?", facesColors.frontBotCenter === facesColors.frontCenter);
         move = "D"
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
         facesColors = getFacesColors(map);
     }
     
-    console.log("testouille: cube résolut !!!");
+    console.log("#finalMoveSet#: cube is resolved !!!");
 }
