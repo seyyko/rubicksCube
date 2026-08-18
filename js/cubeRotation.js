@@ -53,13 +53,13 @@ async function executeLayerMove(name, direction, map, nbRotation, animationDurat
     const moveData = getMoveData(name, direction, map);
 
     console.log(`
-######################### \n
+__________________________ \n
 movement name            : ${name[0].toUpperCase()}${direction < 0 ? "'" : ""}\n
 face moving              : ${name}\n
 direction                : ${direction}\n
 number of rotation       : ${nbRotation}\n
 animation duration (ms)  : ${fullAnimationDuration}\n
-######################### \n\n`)
+__________________________ \n\n`)
 
     console.log("map before movement:")
     renderMap(cubeMap)
