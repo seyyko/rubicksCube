@@ -1,4 +1,5 @@
-import { getPieceByFaceId, getFacesByCube } from "./cubeMap.js";
+import { getFacesColors } from "./algoMatchingUpperPieces.js";
+import { getPieceByFaceId, getFacesByCube, getStickersByCube } from "./cubeMap.js";
 import { getOptimalMove, executeMoves, executeMove } from "./cubeRotation.js";
 import { moves } from "./history.js";
 import { faceToLayer, layerToFace } from "./layerHandler.js";
@@ -59,11 +60,11 @@ import { wait } from "./shuffle.js";
 //   Execute z'
 //   Then REPEAT the KING Algorithm.
 
-function whoIsKing(map, edgeFaces, edgeCube, frontCenter){
+function whoIsKing(map, edgeFaces, edgeCube, frontCenterColor){
     let king;
     for (let i = 0; i < map[edgeFaces[0]].length; i++) {
         if (map[edgeFaces[0]][i].cube === edgeCube){
-            if (map[edgeFaces[0]][i].colorId === frontCenter.colorId){
+            if (map[edgeFaces[0]][i].colorId === frontCenterColor){
                 king = edgeFaces[1]
             } else{
                 king = edgeFaces[0]
@@ -73,36 +74,29 @@ function whoIsKing(map, edgeFaces, edgeCube, frontCenter){
     return king
 }
 
-function isKing(center, king, map){
+function isKing(centerColor, king, map){
     for (let i = 0; i < map.length; i++) {
-        if (map[i][4] === center){
+        if (map[i][4].colorId === centerColor){
             return king === i;
         }   
     }
 }
 
 export async function kingAlgorithm(map, history, panel=null, animationDuration=0, changeBg=false){    
-    for (let _ = 0; _ < 4; _++) {
+    for (let i = 0; i < 4; i++) {
         const neighbors = [0, 1, 4];
-        const foreigns = [2, 3, 5];
-        const frontCenter = map[0][4];
-        const upperCenter = map[1][4];
-        const backCenter  = map[4][4];
-        const downCenter = map[5][4];
-        const frontFace = getFacesByCube(frontCenter.cube)[0];
-        const upperFace = getFacesByCube(upperCenter.cube)[0];
-        const backFace  = getFacesByCube(backCenter.cube)[0];
-        const downFace = map[5];
-
-        if (
-            downFace[1].colorId === downCenter.colorId
-            && downFace[3].colorId === downCenter.colorId
-            && downFace[5].colorId === downCenter.colorId
-            && downFace[7].colorId === downCenter.colorId
-        ){
-            return;
+        const edgesCube = [1, 3, 5, 7]
+        const faces = ["front", "back", "left", "right", "upper", "down"]
+        const faceEdgePairs = {
+            "front": ["upperEdgeDown", "rightEdgeLeft", "downEdgeUpper", "leftEdgeRight", "x'"],
+            "upper": ["backEdgeDown", "rightEdgeUpper", "frontEdgeUpper", "leftEdgeUpper", "x2"],
+            "right": ["upperEdgeRight", "backEdgeRight", "downEdgeRight", "frontEdgeRight", "z"],
+            "left": ["upperEdgeLeft", "backEdgeLeft", "downEdgeLeft", "frontEdgeLeft", "z'"],
+            "back": ["downEdgeDown", "rightEdgeRight", "upperEdgeUpper", "leftEdgeLeft", "x"],
+            "down": ["frontEdgeDown", "rightEdgeDown", "downEdgeUpper", "leftEdgeDown"],
         }
 
+        let facesColors = getFacesColors(map);
         let running = true;
         let edge;
         let edgeCube;
@@ -112,13 +106,64 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
         let otherFace;
         let target;
 
+        if (
+            facesColors.downEdgeUpper === facesColors.downCenter
+            && facesColors.downEdgeRight === facesColors.downCenter
+            && facesColors.downEdgeDown === facesColors.downCenter
+            && facesColors.downEdgeLeft === facesColors.downCenter
+
+            && facesColors.frontEdgeDown === facesColors.frontEdgeDown
+            && facesColors.rightEdgeDown === facesColors.rightCenter
+            && facesColors.leftEdgeDown === facesColors.leftCenter
+            && facesColors.backEdgeTop === facesColors.backCenter
+        ){
+            return;
+        }
+
+        for (let i = 0; i < faces.length; i++) {
+            const face = faces[i];
+
+            if (
+                facesColors[`${face}EdgeUpper`] === facesColors[`${face}Center`] &&
+                facesColors[`${face}EdgeRight`] === facesColors[`${face}Center`] &&
+                facesColors[`${face}EdgeDown`] === facesColors[`${face}Center`] &&
+                facesColors[`${face}EdgeLeft`] === facesColors[`${face}Center`] &&
+                !(
+                    facesColors[faceEdgePairs[face][0]] ===
+                    facesColors[faceEdgePairs[face][0].split(/(?=[A-Z])/)[0] + "Center"] &&
+
+                    facesColors[faceEdgePairs[face][1]] ===
+                    facesColors[faceEdgePairs[face][1].split(/(?=[A-Z])/)[0] + "Center"] &&
+
+                    facesColors[faceEdgePairs[face][2]] ===
+                    facesColors[faceEdgePairs[face][2].split(/(?=[A-Z])/)[0] + "Center"] &&
+
+                    facesColors[faceEdgePairs[face][3]] ===
+                    facesColors[faceEdgePairs[face][3].split(/(?=[A-Z])/)[0] + "Center"]
+                )
+            ){
+                while(
+                    facesColors[faceEdgePairs[face][0]] !==
+                    facesColors[faceEdgePairs[face][0].split(/(?=[A-Z])/)[0] + "Center"]
+                ){
+                    move = faces[i][0].toUpperCase();
+                    await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                    facesColors = getFacesColors(map);
+                }
+                if (faceEdgePairs[face][4]){
+                    await executeMove(faceEdgePairs[face][4], "solver", map, history, panel, animationDuration, changeBg);  
+                }
+                return;
+            }
+        }
+
         console.log("\n")
         while(running){
-            edge = getPieceByFaceId("edge", [frontCenter.colorId, upperCenter.colorId], map)
+            edge = getPieceByFaceId("edge", [facesColors.frontCenter, facesColors.upperCenter], map)
             edgeCube = Number(Object.keys(edge)[0])
             edgeFaces = getFacesByCube(edgeCube)
 
-            king = whoIsKing(map, edgeFaces, edgeCube, frontCenter)
+            king = whoIsKing(map, edgeFaces, edgeCube, facesColors.frontCenter)
             
             if (neighbors.includes(edgeFaces[0]) || neighbors.includes(edgeFaces[1])) {
                 if (edgeFaces.includes(layerToFace.frontLayer)) {
@@ -130,17 +175,16 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                         otherFace = edgeFaces[0] === 0 ? edgeFaces[1] : edgeFaces[0];
                         move = `${faceToLayer[otherFace][0].toUpperCase()}2`;
                         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
-
-                    } else if (!isKing(frontCenter, king, map)){
+                        facesColors = getFacesColors(map);
+                    } else if (!isKing(facesColors.frontCenter, king, map)){
                         console.log("#kingAlgorithm# the edge is between the front and upper face and front is not the king.");
                         console.log("#kingAlgorithm# edge is correctly placed.");
                         running = false;
                     }
-
                 }
                 if (edgeFaces.includes(layerToFace.upperLayer)) {
                     console.log("#kingAlgorithm# the edge is on the upper face.");
-                    const isUpperKing = isKing(upperCenter, king, map)
+                    const isUpperKing = isKing(facesColors.upperCenter, king, map)
 
                     if (isUpperKing){
                         console.log("#kingAlgorithm# upper face is the king");
@@ -156,6 +200,7 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     console.log("function getOptimalMove:", move);
                     if (move.length > 0){
                         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                        facesColors = getFacesColors(map);
                     }
 
                     running = !isUpperKing;
@@ -169,13 +214,15 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     console.log("function getOptimalMove:", move);
                     if (move.length > 0){
                         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                        facesColors = getFacesColors(map);
                     }
 
-                    if (isKing(backCenter, king, map)){
+                    if (isKing(facesColors.backCenter, king, map)){
                         console.log("#kingAlgorithm# then execute: B L U' L'");
 
                         move = ["B", "L", "U'", "L'"]
                         await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+                        facesColors = getFacesColors(map);
                         running = false;
                     }
                 }
@@ -191,12 +238,14 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     move = ["D", "B", "D'"]
                 }
                 await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+                facesColors = getFacesColors(map);
             }
         }
         console.log("#kingAlgorithm# edge is correctly placed, execute z'")
 
         move = "z'";
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+        facesColors = getFacesColors(map);
         console.log("\n\n\n")
     }
 
