@@ -14,22 +14,22 @@ mainCube.appendChild(layer);
 createMoves();
 renderMap(cubeMap);
 
-export async function doKingAlgorithm(map, history, panel, animationDuration, changeBg){
-    await kingAlgorithm(map, history, panel, animationDuration, changeBg);
-}
+// export async function doKingAlgorithm(map, history, panel, animationDuration, changeBg){
+//     await kingAlgorithm(map, history, panel, animationDuration, changeBg);
+// }
 
-export async function doAlgorithm(map){
-    const h = await algorithm(map);
-    console.log("algorithm:", h)
-    // console.clear();
-}
+// export async function doAlgorithm(map, history){
+//     const h = await algorithm(map, history);
+//     console.log("algorithm:", h)
+//     // console.clear();
+// }
 
-window.doKingAlgorithm = doKingAlgorithm;
-window.doAlgorithm = doAlgorithm;
-window.cm = cubeMap;
-window.h = history;
-window.p = historyPanel;
-window.ad = animationDuration;
+// window.doKingAlgorithm = doKingAlgorithm;
+// window.doAlgorithm = doAlgorithm;
+// window.cm = cubeMap;
+// window.h = history;
+// window.p = historyPanel;
+// window.ad = animationDuration;
 
 // const tests = [
 //     getPieceByFaceId("corner", [0, 1, 2], cubeMap),
