@@ -162,3 +162,12 @@
 #mainCube #c27{
     transform: translateZ(calc(-1 * var(--c))) translateX(calc(2 * var(--c))) translateY(calc(2 * var(--c)));
 }
+
+#timer{
+    position: absolute;
+    top: 0; left: 0;
+    padding: var(--padding-size);
+
+    background-color: rgba(34, 34, 34, 0.2);
+    color: white;
+}
