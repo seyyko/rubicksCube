@@ -9,17 +9,31 @@ import { executeMove, executeMoves } from "./cubeRotation.js";
 // do U until 2 edges are correctly placed.
 
 export function getFacesColors(map) {
-    const temp = {};
     const facesName = ["front", "upper", "right", "left", "back", "down"];
-    const centerId = 4;
-    const botCenterId = [7, 7, 7, 7, 1];
-    for (let i = 0; i < 6; i++) {
-        temp[`${facesName[i]}Center`] = map[i][centerId].colorId
-        if (botCenterId[i]){
-            temp[`${facesName[i]}BotCenter`] = map[i][botCenterId[i]].colorId
+
+    const positions = {
+        CornerUpperLeft: 0,
+        EdgeUpper: 1,
+        CornerUpperRight: 2,
+        EdgeLeft: 3,
+        Center: 4,
+        EdgeRight: 5,
+        CornerDownLeft: 6,
+        EdgeDown: 7,
+        CornerDownRight: 8
+    };
+
+    const temp = {};
+
+    for (let i = 0; i < facesName.length; i++) {
+        const faceName = facesName[i];
+
+        for (const [positionName, positionId] of Object.entries(positions)) {
+            temp[`${faceName}${positionName}`] = map[i][positionId].colorId;
         }
     }
-    return temp
+
+    return temp;
 }
 
 function sortEdgeColor(edgesStickers, crossColor){
