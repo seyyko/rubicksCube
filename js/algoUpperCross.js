@@ -4,6 +4,7 @@
 // center have 2 neigbors in a L shape,
 
 import { getSlotState } from "./algoEdgeParking.js";
+import { getFacesColors } from "./algoMatchingUpperPieces.js";
 import { executeMove, executeMoves } from "./cubeRotation.js";
 
 function getNeighbors(face, centerFaceId){
@@ -39,10 +40,10 @@ function isNeighborsAlined(face, centerFaceId){
 
 export async function upperCross(map, history, panel=null, animationDuration=0, changeBg=false){
     const upperLayer = map[1];
-    const upperCenter = upperLayer[4];
-    const upperCenterColor = upperCenter.colorId;
+    let facesColors = getFacesColors(map);
+    
     let move;
-    let neighbors = getNeighbors(upperLayer, upperCenterColor);
+    let neighbors = getNeighbors(upperLayer, facesColors.upperCenter);
     let neighborsCount = countNeighbors(neighbors);
 
     while (!(neighborsCount === 4)){
@@ -51,10 +52,11 @@ export async function upperCross(map, history, panel=null, animationDuration=0, 
             console.log("#upperCross# 0 neighbor (only the center)")
             move = ["F", "R", "U", "R'", "U'", "F'", "y2"];
             await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            facesColors = getFacesColors(map);
         }else{
             console.log("#upperCross# 2 neighbor (either L shape or straight line)")
-            console.log("#upperCross# neighbors are aligned?", isNeighborsAlined(upperLayer, upperCenterColor))
-            if (isNeighborsAlined(upperLayer, upperCenterColor)) {
+            console.log("#upperCross# neighbors are aligned?", isNeighborsAlined(upperLayer, facesColors.upperCenter))
+            if (isNeighborsAlined(upperLayer, facesColors.upperCenter)) {
                 if (
                     neighbors[0]
                     && neighbors[3]
@@ -66,6 +68,7 @@ export async function upperCross(map, history, panel=null, animationDuration=0, 
                 console.log("#upperCross# neighbors are correctly aligned");
                 move = ["F", "R", "U", "R'", "U'", "F'"];
                 await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+                facesColors = getFacesColors(map);
                 
             }else{
                 if(
@@ -80,10 +83,12 @@ export async function upperCross(map, history, panel=null, animationDuration=0, 
                     move = "U";
                     await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
                 }
+                facesColors = getFacesColors(map);
             }
         }
         console.log("#upperCross# finish with getting updating the neighbors");
-        neighbors = getNeighbors(upperLayer, upperCenterColor);
+        neighbors = getNeighbors(upperLayer, facesColors.upperCenter);
         neighborsCount = countNeighbors(neighbors);
+        facesColors = getFacesColors(map);
     }
 }
