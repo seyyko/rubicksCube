@@ -38,6 +38,8 @@ const nextBtn = document.querySelector(".next");
 const playbackControls = document.querySelector(".playbackControls");
 const solvingDelayInput = document.querySelector(".solvingDelay input");
 
+const solvingTimer = document.getElementById("timer");
+
 let toolMode = false;
 
 let selectedGroup = null;
@@ -46,7 +48,11 @@ let algoMoves = [];
 let moveDone = [];
 let isPlaying = false;
 let isPaused = false;
-let solvingDelay = solvingDelayInput.value * 100; // max 1s
+let solvingDelay = solvingDelayInput.value * 100; // max 1s (0.2s anim + 0.8s delay)
+
+let timerStart = 0;
+let timerElapsed = 0;
+let timerInterval = null;
 
 // functions
 
@@ -73,7 +79,8 @@ async function play(){
     isPlaying = true;
     isPaused = false;
 
-    while (algoMoves.length > 0 && !isPaused) {
+    startTimer();
+    while (algoMoves.length > 0 && !isPaused){
         await next()
         await wait(
             solvingDelay <= animationDuration ? 0 : solvingDelay - animationDuration
@@ -81,10 +88,15 @@ async function play(){
     }
 
     isPlaying = false;
+
+    if (algoMoves.length === 0) {
+        finishTimer();
+    }
 }
 
 function pause(){
     isPaused = true;
+    stopTimer();
 }
 
 async function next(){
@@ -95,10 +107,9 @@ async function next(){
     await executeMove(move, "solver", cubeMap, history, historyPanel,
         solvingDelay < animationDuration ? solvingDelay : animationDuration,
         true); // min 0 max .2
-
 }
 
-async function previous(animDur=animationDuration) {
+async function previous(animDur=animationDuration){
     if (moveDone.length === 0) return;
 
     const move = moveDone.pop();
@@ -106,12 +117,55 @@ async function previous(animDur=animationDuration) {
     await executeMove(opposite[move], "solver", cubeMap, history, historyPanel, animDur, true);
 }
 
-async function stop() {
+async function stop(){
     isPaused = true;
+    resetTimer();
 
-    while (moveDone.length > 0) {
+    while (moveDone.length > 0){
         await previous(0)
     }
+}
+
+function formatTimer(time){
+    const minutes = Math.floor(time / 60000);
+    const seconds = Math.floor(time / 1000) % 60;
+    const centiseconds = Math.floor(time / 10) % 100;
+
+    return `${String(minutes).padStart(2, "0")}:` +
+           `${String(seconds).padStart(2, "0")}.` +
+           `${String(centiseconds).padStart(2, "0")}`;
+}
+
+function updateTimer(){
+    timerElapsed = Date.now() - timerStart;
+    solvingTimer.textContent = formatTimer(timerElapsed);
+}
+
+function startTimer(){
+    if (timerInterval) return;
+
+    timerStart = Date.now() - timerElapsed;
+
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 10);
+}
+
+function stopTimer(){
+    clearInterval(timerInterval);
+    timerInterval = null;
+}
+
+function resetTimer(){
+    stopTimer();
+
+    timerElapsed = 0;
+    solvingTimer.textContent = "00:00.00";
+}
+
+function finishTimer(){
+    stopTimer();
+    solvingTimer.textContent = formatTimer(timerElapsed);
+    timerElapsed = 0;
 }
 
 // events
@@ -128,6 +182,7 @@ movesButtons.forEach(element => {
 });
 
 resetCubeBtn.addEventListener("click", () => {
+    resetTimer();
     resetMap();
     resetHistory(history, historyPanel);
     resetAlgoMoves();
@@ -270,6 +325,7 @@ solveBtn.addEventListener("click", async () => {
 
     disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
     disableBtns(movesButtons);
+    resetTimer()
 
     algoMoves = await algorithm(cubeMap);
     moveDone = [];
