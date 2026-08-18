@@ -122,33 +122,33 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
             
             if (neighbors.includes(edgeFaces[0]) || neighbors.includes(edgeFaces[1])) {
                 if (edgeFaces.includes(layerToFace.frontLayer)) {
-                    console.log("~ The edge is on the front face:");
+                    console.log("#kingAlgorithm# the edge is on the front face:");
                     if (!edgeFaces.includes(layerToFace.upperLayer)){
-                        console.log("# other face is foreign.");
-                        console.log("> ROTATE the foreign face twice, then go to CASE 3.");
+                        console.log("#kingAlgorithm# other face is foreign.");
+                        console.log("#kingAlgorithm# rotate the foreign face twice, then go to case 3.");
 
                         otherFace = edgeFaces[0] === 0 ? edgeFaces[1] : edgeFaces[0];
                         move = `${faceToLayer[otherFace][0].toUpperCase()}2`;
                         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
 
                     } else if (!isKing(frontCenter, king, map)){
-                        console.log("# the edge is between the front and upper face and front is not the KING.");
-                        console.log("> edge is correctly placed.");
+                        console.log("#kingAlgorithm# the edge is between the front and upper face and front is not the king.");
+                        console.log("#kingAlgorithm# edge is correctly placed.");
                         running = false;
                     }
 
                 }
                 if (edgeFaces.includes(layerToFace.upperLayer)) {
-                    console.log("~ The edge is on the upper face.");
+                    console.log("#kingAlgorithm# the edge is on the upper face.");
                     const isUpperKing = isKing(upperCenter, king, map)
 
                     if (isUpperKing){
-                        console.log("# upper face is the KING");
-                        console.log("> REPEAT U until the edge is located between the upper and front faces.");
+                        console.log("#kingAlgorithm# upper face is the king");
+                        console.log("#kingAlgorithm# repeat U until the edge is located between the upper and front faces.");
                         target = 2;
                     }else{
-                        console.log("# upper face is not the KING");
-                        console.log("> REPEAT U until the edge is located between the upper and back faces, then go to CASE 3.");
+                        console.log("#kingAlgorithm# upper face is not the king");
+                        console.log("#kingAlgorithm# repeat U until the edge is located between the upper and back faces, then go to case 3.");
                         target = 20;
                     }
 
@@ -161,9 +161,9 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     running = !isUpperKing;
                 }
                 if (edgeFaces.includes(layerToFace.backLayer)) {
-                    console.log("~ The edge is on the back face.");
-                    console.log("# back face is the KING");
-                    console.log("> REPEAT B until the edge is located between the upper and back faces");
+                    console.log("#kingAlgorithm# the edge is on the back face.");
+                    console.log("#kingAlgorithm# back face is the king");
+                    console.log("#kingAlgorithm# repeat 'B' until the edge is located between the upper and back faces");
                     
                     move = getOptimalMove("backLayer", "edge", edgeCube, 20)
                     console.log("function getOptimalMove:", move);
@@ -172,7 +172,7 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     }
 
                     if (isKing(backCenter, king, map)){
-                        console.log("> then execute: B L U' L'");
+                        console.log("#kingAlgorithm# then execute: B L U' L'");
 
                         move = ["B", "L", "U'", "L'"]
                         await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
@@ -180,26 +180,26 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     }
                 }
             } else {
-                console.log("~ The edge is located between two foreign faces.");
+                console.log("#kingAlgorithm# the edge is located between two foreign faces.");
                 if (edgeFaces.includes(layerToFace.leftLayer)){
-                    console.log("# the edge is between the left and down faces");
-                    console.log("> Execute: D' B' D");
+                    console.log("#kingAlgorithm# the edge is between the left and down faces");
+                    console.log("#kingAlgorithm# execute: D' B' D");
                     move = ["D'", "B'", "D"]
                 }else{
-                    console.log("# the edge is between the right and down faces");
-                    console.log("> Execute: D B D'");
+                    console.log("#kingAlgorithm# the edge is between the right and down faces");
+                    console.log("#kingAlgorithm# execute: D B D'");
                     move = ["D", "B", "D'"]
                 }
                 await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
             }
         }
-        console.log("~ edge is correctly placed")
-        console.log("> Execute z'")
+        console.log("#kingAlgorithm# edge is correctly placed, execute z'")
 
         move = "z'";
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
         console.log("\n\n\n")
     }
 
+    console.log("#kingAlgorithm# cross is done execute x' to put the cross down.")
     await executeMove("x'", "solver", map, history, panel, animationDuration, changeBg);  
 }
