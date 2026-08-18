@@ -19,12 +19,6 @@ function getAlgoDirection(map, crossColor){
 export async function finalMove(map, history, panel=null, animationDuration=0, changeBg=false){
     // algorithm: R U R' U'
     // reversed: U R U' R'
-    
-    const frontLayer = map[0];
-    const rightLayer = map[2];
-    const leftLayer = map[3];
-    const backLayer = map[4];
-    const downLayer = map[5];
     const cornersCube = [9, 27, 25, 7];
 
     let facesColors = getFacesColors(map);
@@ -65,10 +59,10 @@ export async function finalMove(map, history, panel=null, animationDuration=0, c
     console.log("#finalMoveSet# we finish by turning the down face until the cube is done.");
 
     while (
-        !(facesColors.frontBotCenter === facesColors.frontCenter)
+        !(facesColors.frontEdgeDown === facesColors.frontCenter)
     )
     {
-        console.log("#finalMoveSet# down face aligned ?", facesColors.frontBotCenter === facesColors.frontCenter);
+        console.log("#finalMoveSet# down face aligned ?", facesColors.frontEdgeDown === facesColors.frontCenter);
         move = "D"
         await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
         facesColors = getFacesColors(map);
