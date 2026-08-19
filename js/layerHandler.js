@@ -1,11 +1,9 @@
+export const layer = tempLayer;
+
+
 const mainCube = document.getElementById("mainCube");
 const tempLayer = document.createElement("div");
 tempLayer.className = "layer";
-
-// Temporary container used to animate rotations.
-// Cubes involved in a move are moved into this
-// element, rotated, then moved back into mainCube.
-export const layer = tempLayer;
 
 // Concept:
 // Instead of thinking about the cube in 3D,
