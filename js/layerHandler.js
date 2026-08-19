@@ -1,9 +1,8 @@
-export const layer = tempLayer;
-
-
 const mainCube = document.getElementById("mainCube");
 const tempLayer = document.createElement("div");
 tempLayer.className = "layer";
+
+export const layer = tempLayer;
 
 // Concept:
 // Instead of thinking about the cube in 3D,
