@@ -1,9 +1,7 @@
 import { getFacesColors } from "./algoMatchingUpperPieces.js";
-import { getPieceByFaceId, getFacesByCube, getStickersByCube } from "./cubeMap.js";
+import { getPieceByFaceId, getFacesByCube } from "./cubeMap.js";
 import { getOptimalMove, executeMoves, executeMove } from "./cubeRotation.js";
-import { moves } from "./history.js";
 import { faceToLayer, layerToFace } from "./layerHandler.js";
-import { wait } from "./shuffle.js";
 
 // KING algorithm
 //
