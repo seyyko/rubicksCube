@@ -4,8 +4,6 @@ L'idée de ce projet vient de mon petit frère, passionné de Rubik's Cube. Il m
 
 Simulateur de Rubik's Cube 3D développé en HTML, CSS et JavaScript.
 
-🔗 **[Tester le simulateur](https://seyyko.github.io/rubicksCube/)**
-
 ## Fonctionnalités
 
 - [x] Rotation des faces
@@ -44,3 +42,4 @@ Son record étant d'environ **20 à 35 secondes**, j'ai fixé un délai de **0,2
 
 **Résultat : 6–4 pour l'ordinateur.**
 
+🔗 **[Tester le simulateur](https://seyyko.github.io/rubicksCube/)**
