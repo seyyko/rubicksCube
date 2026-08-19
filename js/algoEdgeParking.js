@@ -43,7 +43,7 @@
 import { getFacesColors } from "./algoMatchingUpperPieces.js";
 import { getFacesByCube, getPieceByFaceId } from "./cubeMap.js";
 import { executeMoves, executeMove, getOptimalMove } from "./cubeRotation.js";
-import { faceToLayer, layers, layerToFace } from "./layerHandler.js";
+import { layers, layerToFace } from "./layerHandler.js";
 
 // The goal is to fill all four edge slots in the upper layer.
 // Once all required edges have been moved there, they can be paired
