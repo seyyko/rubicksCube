@@ -23,7 +23,7 @@ function countNeighbors(neighbors){
     return neighborsCount;
 }
 
-function isNeighborsAlined(face, centerFaceId){
+function isNeighborsAligned(face, centerFaceId){
     const neighbors = getNeighbors(face, centerFaceId);
     const neighborsCount = getNeighbors(face, centerFaceId);
     if (neighborsCount < 2) return;
@@ -54,8 +54,8 @@ export async function upperCross(map, history, panel=null, animationDuration=0, 
             facesColors = getFacesColors(map);
         }else{
             console.log("#upperCross# 2 neighbor (either L shape or straight line)")
-            console.log("#upperCross# neighbors are aligned?", isNeighborsAlined(upperLayer, facesColors.upperCenter))
-            if (isNeighborsAlined(upperLayer, facesColors.upperCenter)) {
+            console.log("#upperCross# neighbors are aligned?", isNeighborsAligned(upperLayer, facesColors.upperCenter))
+            if (isNeighborsAligned(upperLayer, facesColors.upperCenter)) {
                 if (
                     neighbors[0]
                     && neighbors[3]
