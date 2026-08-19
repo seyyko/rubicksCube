@@ -3,7 +3,7 @@
 // center have 2 neigbors in a straight line (aligned),
 // center have 2 neigbors in a L shape (not aligned),
 
-import { getFacesColors } from "./algoMatchingUpperPieces.js";
+import { getFacesColors } from "./colors.js";
 import { executeMove, executeMoves } from "./cubeRotation.js";
 
 function getNeighbors(face, centerFaceId){

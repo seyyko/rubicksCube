@@ -40,7 +40,7 @@
 // [2] [ ] [3]
 // [ ] [4] [ ]
 
-import { getFacesColors } from "./algoMatchingUpperPieces.js";
+import { getFacesColors } from "./colors.js";
 import { getFacesByCube, getPieceByFaceId } from "./cubeMap.js";
 import { executeMoves, executeMove, getOptimalMove } from "./cubeRotation.js";
 import { layers, layerToFace } from "./layerHandler.js";

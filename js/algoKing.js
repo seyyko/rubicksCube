@@ -1,4 +1,4 @@
-import { getFacesColors } from "./algoMatchingUpperPieces.js";
+import { getFacesColors } from "./colors.js";
 import { getPieceByFaceId, getFacesByCube } from "./cubeMap.js";
 import { getOptimalMove, executeMoves, executeMove } from "./cubeRotation.js";
 import { faceToLayer, layerToFace } from "./layerHandler.js";

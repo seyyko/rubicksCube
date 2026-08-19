@@ -1,4 +1,4 @@
-import { getFacesColors } from "./algoMatchingUpperPieces.js";
+import { getFacesColors } from "./colors.js";
 import { executeMove, executeMoves } from "./cubeRotation.js";
 
 
