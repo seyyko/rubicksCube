@@ -42,4 +42,4 @@ Son record étant d'environ **20 à 35 secondes**, j'ai fixé un délai de **0,2
 
 **Résultat : 6–4 pour l'ordinateur.**
 
-🔗 **[Tester le simulateur](https://seyyko.github.io/rubicksCube/)**
+✨ **[Découvrir le projet](https://seyyko.github.io/rubicksCube/)**
