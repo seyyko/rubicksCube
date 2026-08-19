@@ -1,9 +1,9 @@
 import { layer } from "./layerHandler.js"
-import { cubeMap, getPieceByFaceId } from "./cubeMap.js"
-import { algorithm } from "./algorithm.js"
-import { renderMap } from "./cubeRenderer.js"
 import { createMoves } from "./history.js"
-import { kingAlgorithm } from "./algoKing.js"
+import { renderMap } from "./cubeRenderer.js"
+import { cubeMap } from "./cubeMap.js"
+// import { algorithm } from "./algorithm.js"
+// import { kingAlgorithm } from "./algoKing.js"
 
 export const history = Array();
 export const historyPanel = document.getElementById("history");
@@ -30,14 +30,3 @@ renderMap(cubeMap);
 // window.h = history;
 // window.p = historyPanel;
 // window.ad = animationDuration;
-
-// const tests = [
-//     getPieceByFaceId("corner", [0, 1, 2], cubeMap),
-//     getPieceByFaceId("corner", [0, 1], cubeMap),
-//     getPieceByFaceId("corner", [0], cubeMap),
-//     getPieceByFaceId("edge"  , [0, 1], cubeMap),
-//     getPieceByFaceId("edge"  , [0], cubeMap),
-//     getPieceByFaceId("center", [0], cubeMap),
-// ]
-
-// console.log(tests)
