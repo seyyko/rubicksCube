@@ -1,9 +1,8 @@
 // cases:
 // center doesn't have neightbor,
-// center have 2 neigbors in a straight line,
-// center have 2 neigbors in a L shape,
+// center have 2 neigbors in a straight line (aligned),
+// center have 2 neigbors in a L shape (not aligned),
 
-import { getSlotState } from "./algoEdgeParking.js";
 import { getFacesColors } from "./algoMatchingUpperPieces.js";
 import { executeMove, executeMoves } from "./cubeRotation.js";
 
