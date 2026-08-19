@@ -43,3 +43,5 @@ Son record étant d'environ **20 à 35 secondes**, j'ai fixé un délai de **0,2
 **Résultat : 6–4 pour l'ordinateur.**
 
 ✨ **[Découvrir le projet](https://seyyko.github.io/rubicksCube/)**
+
+![Aperçu du Rubik's Cube](./img/191.png)
