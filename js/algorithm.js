@@ -1,9 +1,7 @@
-import { cubeMap } from "./cubeMap.js"
-import { executeMoves } from "./cubeRotation.js";
-import { edgeParking, invertedTCase } from "./algoEdgeParking.js";
 import { kingAlgorithm } from "./algoKing.js"
+import { invertedTCase, edgeParking } from "./algoEdgeParking.js";
 import { upperCross } from "./algoUpperCross.js";
-import { matchingUpperCorners, matchingUpperEdges } from "./algoMatchingUpperPieces.js";
+import { matchingUpperEdges, matchingUpperCorners } from "./algoMatchingUpperPieces.js";
 import { finalMove } from "./algoFinalMove.js";
 
 // resolution algorithm steps:
