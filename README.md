@@ -1,5 +1,7 @@
 # Rubik's Cube
 
+L'idée de ce projet vient de mon petit frère, passionné de Rubik's Cube. Il m'a fait découvrir ce casse-tête que j'ai appris à résoudre avant qu'il ne me dépasse à son tour. Fasciné par la complexité de sa résolution, j'ai voulu comprendre si j'étais capable de la recréer moi-même : j'ai donc reconstruit chaque algorithme à partir de mes souvenirs, sans vidéo, sans tutoriel et sans aucune aide extérieure, uniquement à partir de mes expériences de résolution du cube à la main.
+
 Simulateur de Rubik's Cube 3D développé en HTML, CSS et JavaScript.
 
 ## Fonctionnalités
