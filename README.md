@@ -12,3 +12,30 @@ Simulateur de Rubik's Cube 3D développé en HTML, CSS et JavaScript.
 - [x] Personnalisation des couleurs
 - [ ] Personnalisation des stickers / scan IRL
 - [x] Résolution complète (7/7)
+
+## Tests & performances
+
+### Performance de l'algorithme
+
+- Mélange aléatoire : **20 mouvements**
+- Résolution : **~150 mouvements en moyenne**
+- Délai entre les mouvements : **0 s**
+- Record observé : **1,91 s**
+
+Ce test permet de mesurer la capacité de l'algorithme à résoudre rapidement le cube, sans délai artificiel entre les mouvements.
+
+### Combat humain vs ordinateur
+
+Test réalisé à armes égales contre mon petit frère.
+
+Son record étant d'environ **20 à 35 secondes**, j'ai fixé un délai de **0,2 s entre chaque mouvement** pour l'ordinateur. Avec une résolution moyenne de ~150 mouvements, cela représente environ **30 secondes** de délai cumulé.
+
+> Deux manches préliminaires à **0,3 s par mouvement** ont servi de **manches de chauffe** et à **calibrer la vitesse de l'ordinateur**.
+
+| Participant | Victoires |
+|-------------|-----------|
+| 🤖 Ordinateur | **6** |
+| 👤 Humain | **4** |
+
+**Résultat : 6–4 pour l'ordinateur.**
+
