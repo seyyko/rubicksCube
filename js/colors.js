@@ -70,3 +70,31 @@ export function resetColor(){
     colors = initColor();
     updateBackground(cubeMap, true);
 }
+
+export function getFacesColors(map) {
+    const facesName = ["front", "upper", "right", "left", "back", "down"];
+
+    const positions = {
+        CornerUpperLeft: 0,
+        EdgeUpper: 1,
+        CornerUpperRight: 2,
+        EdgeLeft: 3,
+        Center: 4,
+        EdgeRight: 5,
+        CornerDownLeft: 6,
+        EdgeDown: 7,
+        CornerDownRight: 8
+    };
+
+    const temp = {};
+
+    for (let i = 0; i < facesName.length; i++) {
+        const faceName = facesName[i];
+
+        for (const [positionName, positionId] of Object.entries(positions)) {
+            temp[`${faceName}${positionName}`] = map[i][positionId].colorId;
+        }
+    }
+
+    return temp;
+}
