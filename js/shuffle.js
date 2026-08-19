@@ -1,4 +1,4 @@
-import { cubeMap, updateBackground } from "./cubeMap.js";
+import { cubeMap } from "./cubeMap.js";
 import { moves } from "./history.js";
 import { executeMove } from "./cubeRotation.js";
 import { history, historyPanel } from "./main.js";
