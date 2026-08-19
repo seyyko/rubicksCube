@@ -1,5 +1,4 @@
 import { getFacesColors } from "./algoMatchingUpperPieces.js";
-import { getStickersByCube } from "./cubeMap.js";
 import { executeMove, executeMoves } from "./cubeRotation.js";
 
 
