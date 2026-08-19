@@ -4,9 +4,6 @@
 import { getStickersByCube } from "./cubeMap.js";
 import { executeMove, executeMoves } from "./cubeRotation.js";
 
-// get edges (color and pos)
-// get center of front right back and left
-// do U until 2 edges are correctly placed.
 
 export function getFacesColors(map) {
     const facesName = ["front", "upper", "right", "left", "back", "down"];
