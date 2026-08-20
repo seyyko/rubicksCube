@@ -78,6 +78,14 @@
     display: none;
 }
 
+#controls .tools h2{
+    display: grid;
+    place-items: center start;
+    padding-inline: var(--padding-size);
+    height: var(--moves-button-size);
+    /* background-color: rgba(34, 34, 34, .2); */
+}
+
 /*  */
 
 .resetColor,
@@ -176,10 +184,10 @@
     text-align: center;
 }
 
-.solvingDelay label p:nth-of-type(2){
+.solvingDelay label span:nth-of-type(2){
     text-align: center;
 }
-.solvingDelay label p:nth-of-type(3){
+.solvingDelay label span:nth-of-type(3){
     text-align: right;
 }
 
