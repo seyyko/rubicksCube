@@ -54,6 +54,8 @@ let timerStart = 0;
 let timerElapsed = 0;
 let timerInterval = null;
 
+export let selectedColor = "rgb(34, 34, 34)";
+
 // functions
 
 function disableBtns(list){
@@ -215,6 +217,7 @@ colorPreviews.forEach(preview => {
     preview.addEventListener("click", () => {
         colorsContainer.style.backgroundColor = 
         colorPickerInput.value + "33";
+        selectedColor = colorPickerInput.value;
         // opacity ~ 0.2 (33 for hex)
     });
 
