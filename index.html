@@ -31,6 +31,7 @@
             <div id="controls">
                 <div class="moves"></div>
                 <div class="tools">
+                    <h2>colors</h2>
                     <div class="paintCube">
                         <span><input type="color"></span>
                         <span><input type="color"></span>
@@ -44,6 +45,12 @@
                         <button>reset color</button>
                     </div>
 
+                    <div class="scan">
+                        <button>scan your cube</button>
+                    </div>
+
+                    <h2>view</h2>
+
                     <div class="resetPos">
                         <button>reset position</button>
                     </div>
@@ -52,6 +59,8 @@
                         <input type="checkbox" name="debug">
                         <label for="debug">debug mode</label>
                     </div>
+
+                    <h2>solving</h2>
 
                     <div class="solve">
                         <button>solve the cube</button>
@@ -67,16 +76,12 @@
 
                     <div class="solvingDelay">
                         <label>
-                            <p>0sec</p>
-                            <p>delay</p>
-                            <p>1sec</p>
+                            <span>0sec</span>
+                            <span>delay</span>
+                            <span>1sec</span>
                         </label>
                         <input type="range" value="5" max="10">
                         <label></label>
-                    </div>
-
-                    <div class="scan">
-                        <button>scan your cube.</button>
                     </div>
                 </div>
             </div>
@@ -92,6 +97,7 @@
             <div id="timer">00:00:00</div>
             <div id="scanBox">
                 <div class="cubeContainer"></div>
+                <button>check the scan</button>
             </div>
         </div>
         <div id="bg"></div>
