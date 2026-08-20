@@ -60,8 +60,11 @@
 
 /*  */
 
+#scanBox .cubeContainer .face{
+    background-color: rgb(34, 34, 34);
+}
 .cubeContainer .face{
-    background-color: rgba(34, 34, 34, 1);
+    background-color: black;
     user-select: none;
 }
 
