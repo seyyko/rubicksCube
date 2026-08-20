@@ -9,6 +9,19 @@
     display: none;
 }
 
+#scanBox button{
+    position: absolute;
+    bottom: var(--moves-button-size);
+    left: 50%;
+
+    transform: translateX(-50%);
+    height: var(--moves-button-size);
+    padding-inline: var(--padding-size);
+
+    background-color: rgba(34, 34, 34, 0.4);
+    color: white;
+}
+
 .tools .scan button{
     background-color: rgba(34, 34, 34, 0.2);
     height: var(--moves-button-size);
