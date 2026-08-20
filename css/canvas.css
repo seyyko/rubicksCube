@@ -10,7 +10,7 @@
     background-color: rgba(34, 34, 34, 0.2);
 }
 
-#mainCube{
+.cubeContainer{
     width: calc(var(--c) * 3);
     height: calc(var(--c) * 3);
     transform-style: preserve-3d;
@@ -19,10 +19,10 @@
     cursor: grab;
 }
 
-#mainCube.showCell .cube .face{
+.cubeContainer.showCell .cube .face{
     opacity: .2;
 }
-#mainCube.showCell .cube p{
+.cubeContainer.showCell .cube p{
     background-color: white;
     display: grid;
     place-items: center;
@@ -30,7 +30,7 @@
     aspect-ratio: 1;
 }
 
-#mainCube .cube{
+.cubeContainer .cube{
     position: absolute;
     min-width: var(--c); min-height: var(--c);
     transform-style: preserve-3d;
@@ -60,106 +60,106 @@
 
 /*  */
 
-#mainCube .face{
-    background-color: black;
+.cubeContainer .face{
+    background-color: rgba(34, 34, 34, 1);
     user-select: none;
 }
 
 /*  */
 
-#mainCube #c1{
+.cubeContainer #c1{
     transform: translateZ(var(--c));
 }
 
-#mainCube #c2{
+.cubeContainer #c2{
     transform: translateZ(var(--c)) translateX(var(--c));
 }
 
-#mainCube #c3{
+.cubeContainer #c3{
     transform: translateZ(var(--c)) translateX(calc(2 * var(--c)));
 }
 
-#mainCube #c4{
+.cubeContainer #c4{
     transform: translateZ(var(--c)) translateY(var(--c));
 }
-#mainCube #c5{
+.cubeContainer #c5{
     transform: translateZ(var(--c)) translateX(var(--c)) translateY(var(--c));
 }
-#mainCube #c6{
+.cubeContainer #c6{
     transform: translateZ(var(--c)) translateX(calc(2 * var(--c))) translateY(var(--c));
 }
 
-#mainCube #c7{
+.cubeContainer #c7{
     transform: translateZ(var(--c)) translateY(calc(2 * var(--c)));
 }
-#mainCube #c8{
+.cubeContainer #c8{
     transform: translateZ(var(--c)) translateX(var(--c)) translateY(calc(2 * var(--c)));
 }
-#mainCube #c9{
+.cubeContainer #c9{
     transform: translateZ(var(--c)) translateX(calc(2 * var(--c))) translateY(calc(2 * var(--c)));
 }
 
 /*  */
 
-#mainCube #c10{
+.cubeContainer #c10{
     transform: none;
 }
-#mainCube #c11{
+.cubeContainer #c11{
     transform: translateX(var(--c));
 }
-#mainCube #c12{
+.cubeContainer #c12{
     transform: translateX(calc(2 * var(--c)));
 }
 
-#mainCube #c13{
+.cubeContainer #c13{
     transform: translateY(var(--c));
 }
-#mainCube #c14{
+.cubeContainer #c14{
     transform: translateX(var(--c)) translateY(var(--c));
 }
-#mainCube #c15{
+.cubeContainer #c15{
     transform: translateX(calc(2 * var(--c))) translateY(var(--c));
 }
 
-#mainCube #c16{
+.cubeContainer #c16{
     transform: translateY(calc(2 * var(--c)));
 }
-#mainCube #c17{
+.cubeContainer #c17{
     transform: translateX(var(--c)) translateY(calc(2 * var(--c)));
 }
-#mainCube #c18{
+.cubeContainer #c18{
     transform: translateX(calc(2 * var(--c))) translateY(calc(2 * var(--c)));
 }
 
 /*  */
 
-#mainCube #c19{
+.cubeContainer #c19{
     transform: translateZ(calc(-1 * var(--c)));
 }
-#mainCube #c20{
+.cubeContainer #c20{
     transform: translateZ(calc(-1 * var(--c))) translateX(var(--c));
 }
-#mainCube #c21{
+.cubeContainer #c21{
     transform: translateZ(calc(-1 * var(--c))) translateX(calc(2 * var(--c)));
 }
 
-#mainCube #c22{
+.cubeContainer #c22{
     transform: translateZ(calc(-1 * var(--c))) translateY(var(--c));
 }
-#mainCube #c23{
+.cubeContainer #c23{
     transform: translateZ(calc(-1 * var(--c))) translateX(var(--c)) translateY(var(--c));
 }
-#mainCube #c24{
+.cubeContainer #c24{
     transform: translateZ(calc(-1 * var(--c))) translateX(calc(2 * var(--c))) translateY(var(--c));
 }
 
-#mainCube #c25{
+.cubeContainer #c25{
     transform: translateZ(calc(-1 * var(--c))) translateY(calc(2 * var(--c)));
 }
-#mainCube #c26{
+.cubeContainer #c26{
     transform: translateZ(calc(-1 * var(--c))) translateX(var(--c)) translateY(calc(2 * var(--c)));
 }
-#mainCube #c27{
+.cubeContainer #c27{
     transform: translateZ(calc(-1 * var(--c))) translateX(calc(2 * var(--c))) translateY(calc(2 * var(--c)));
 }
 
