@@ -1,10 +1,16 @@
+import { selectedColor } from "./eventHandler.js";
+
 const canvas = document.querySelector("#canvas");
 const mainCube = document.querySelector("#mainCube");
+const scanBoxCube = document.querySelector("#scanBox .cubeContainer");
 
+let pointerDown = false;
 let drag = false;
 
 let x = 0;
 let y = 0;
+
+let clickedFace = null;
 
 const posX = -30;
 const posY = -45;
@@ -17,50 +23,84 @@ document.querySelectorAll(".cube p").forEach(element => {
 });
 
 canvas.addEventListener("pointerdown", e => {
-    // Ignore interactions coming from the menu.
-    if (e.target.closest("#menu")) return;
-    
-    drag = true;
-    // Store the pointer position at the start
-    // of the drag operation.
+    pointerDown = true;
+    drag = false;
+
     x = e.clientX;
     y = e.clientY;
 
-    // Capture the pointer so dragging continues
-    // even if the cursor leaves the cube area.
-    mainCube.setPointerCapture(e.pointerId);
+    clickedFace = e.target.closest("#scanBox .face");
+
+    canvas.setPointerCapture(e.pointerId);
 });
 
+
 canvas.addEventListener("pointermove", e => {
-    // Only rotate the cube while dragging.
+    if (!pointerDown) return;
+
+    const dx = e.clientX - x;
+    const dy = e.clientY - y;
+
+    if (!drag && Math.hypot(dx, dy) > 3) {
+        drag = true;
+    }
+
     if (!drag) return;
 
-    ry += (e.clientX - x) * 0.4;
-    rx -= (e.clientY - y) * 0.4;
+    ry += dx * 0.4;
+    rx -= dy * 0.4;
 
     x = e.clientX;
     y = e.clientY;
 
-    mainCube.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    mainCube.style.transform =
+        `rotateX(${rx}deg) rotateY(${ry}deg)`;
 
-    // In debug mode, cube IDs must remain readable.
-    // Rotate them in the opposite direction so they
-    // always face the camera.
+    scanBoxCube.style.transform =
+        `rotateX(${rx}deg) rotateY(${ry}deg)`;
+
     if (mainCube.classList.contains("showCell")) {
         document.querySelectorAll(".cube p").forEach(element => {
-            element.style.transform = `rotateY(${-ry}deg) rotateX(${-rx}deg)`;
+            element.style.transform =
+                `rotateY(${-ry}deg) rotateX(${-rx}deg)`;
         });
     }
 });
 
-canvas.addEventListener("pointerup", () => drag = false);
+
+canvas.addEventListener("pointerup", e => {
+    if (!drag && clickedFace) {
+        console.log("testouille", clickedFace, selectedColor);
+        clickedFace.style.backgroundColor = selectedColor;
+    }
+
+    pointerDown = false;
+    drag = false;
+    clickedFace = null;
+
+    canvas.releasePointerCapture(e.pointerId);
+});
+
+
+canvas.addEventListener("pointercancel", e => {
+    pointerDown = false;
+    drag = false;
+    clickedFace = null;
+
+    if (canvas.hasPointerCapture(e.pointerId)) {
+        canvas.releasePointerCapture(e.pointerId);
+    }
+});
 
 export function resetPosition(ms){
     mainCube.style.transition = `transform ${ms / 1000}s ease`;
     mainCube.style.transform = `rotateX(${posX}deg) rotateY(${posY}deg)`;
+    scanBoxCube.style.transition = `transform ${ms / 1000}s ease`;
+    scanBoxCube.style.transform = `rotateX(${posX}deg) rotateY(${posY}deg)`;
 
     setTimeout(() => {
         mainCube.style.transition = `none`;
+        scanBoxCube.style.transition = `none`;
         document.querySelectorAll(".cube p").forEach(element => {
             element.style.transform = `rotateY(${-posY}deg) rotateX(${-posX}deg)`;
         });
