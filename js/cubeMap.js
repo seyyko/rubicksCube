@@ -1,6 +1,9 @@
 import { layers, layerToFace } from "./layerHandler.js"
 import { colors } from "./colors.js";
 
+const mainCube = document.getElementById("mainCube");
+const scanBoxCube = document.querySelector("#scanBox .cubeContainer");
+
 const faceAxis = {
     // Each cube has 6 faces, always oriented
     // along the same three axes.
@@ -99,8 +102,7 @@ function fillMap(map){
     }
 }
 
-function createMainCube() {
-    const mainCube = document.getElementById("mainCube");
+function createMainCube(container){
     for (let i = 1; i <= 27; i++) {
         const cube = document.createElement("div");
         cube.id = `c${i}`;
@@ -116,11 +118,12 @@ function createMainCube() {
         p.textContent = `c${i}`;
         cube.appendChild(p);
 
-        mainCube.appendChild(cube);
+        container.appendChild(cube);
     }
 }
 
-createMainCube()
+createMainCube(mainCube)
+createMainCube(scanBoxCube)
 
 export let cubeMap = initMap();
 
