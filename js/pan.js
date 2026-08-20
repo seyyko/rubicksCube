@@ -70,7 +70,6 @@ canvas.addEventListener("pointermove", e => {
 
 canvas.addEventListener("pointerup", e => {
     if (!drag && clickedFace) {
-        console.log("testouille", clickedFace, selectedColor);
         clickedFace.style.backgroundColor = selectedColor;
     }
 
