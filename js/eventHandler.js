@@ -251,6 +251,7 @@ colorPickerInputs.forEach(element => {
 });
 
 resetColorBtn.addEventListener("click", () => {
+    selectedColor = "rgb(34, 34, 34)";
     resetColor();
 });
 
