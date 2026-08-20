@@ -42,6 +42,24 @@ Son record étant d'environ **20 à 35 secondes**, j'ai fixé un délai de **0,2
 
 **Résultat : 6–4 pour l'ordinateur.**
 
+## ⚡ Performances du site
+
+Le site a été testé avec **Google Lighthouse** afin d'évaluer ses performances sur mobile et ordinateur.
+
+| Indicateur | 📱 Mobile | 🖥️ Ordinateur |
+|:---|:---:|:---:|
+| **Performances** | **100/100** | **100/100** |
+| **Accessibilité** | **100/100** | **100/100** |
+| **Bonnes pratiques** | **100/100** | **100/100** |
+| **SEO** | **100/100** | **100/100** |
+| First Contentful Paint | 0,9 s | 0,2 s |
+| Largest Contentful Paint | 1,1 s | 0,2 s |
+| Total Blocking Time | 0 ms | 0 ms |
+| Cumulative Layout Shift | 0 | 0 |
+| Speed Index | 0,9 s | 0,3 s |
+
+>Les tests ont été réalisés le **20 août 2026** avec **Lighthouse 13.4.1**, sur une connexion 4G simulée pour mobile et en configuration ordinateur.
+
 ✨ **[Découvrir le projet](https://seyyko.github.io/rubicksCube/)**
 
 ![Aperçu du Rubik's Cube](./img/191.png)
