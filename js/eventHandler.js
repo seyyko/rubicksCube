@@ -1,5 +1,5 @@
 import { executeMove } from "./cubeRotation.js";
-import { cubeMap, resetMap } from "./cubeMap.js";
+import { cubeMap, resetMap, scanBoxMap } from "./cubeMap.js";
 import { resetHistory, deleteGroup, opposite } from "./history.js";
 import { shuffleCube, wait } from "./shuffle.js";
 import { updateColor, resetColor } from "./colors.js";
@@ -30,11 +30,6 @@ const mainCube = document.getElementById("mainCube");
 const popup = document.getElementById("popup");
 
 const solveBtn = document.querySelector(".solve button");
-const previousBtn = document.querySelector(".previous");
-const pauseBtn = document.querySelector(".pause");
-const playBtn = document.querySelector(".play");
-const stopBtn = document.querySelector(".stop");
-const nextBtn = document.querySelector(".next");
 const playbackControls = document.querySelector(".playbackControls");
 const solvingDelayInput = document.querySelector(".solvingDelay input");
 
@@ -55,6 +50,7 @@ let timerElapsed = 0;
 let timerInterval = null;
 
 export let selectedColor = "rgb(34, 34, 34)";
+export let selectedColorId = null;
 
 // functions
 
@@ -185,7 +181,8 @@ movesButtons.forEach(element => {
 
 resetCubeBtn.addEventListener("click", () => {
     resetTimer();
-    resetMap();
+    resetMap(cubeMap, "#mainCube", true, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+    resetMap(scanBoxMap, "#scanBox", true, [4]);
     resetHistory(history, historyPanel);
     resetAlgoMoves();
 });
@@ -218,6 +215,7 @@ colorPreviews.forEach(preview => {
         colorsContainer.style.backgroundColor = 
         colorPickerInput.value + "33";
         selectedColor = colorPickerInput.value;
+        selectedColorId = Array.from(preview.parentElement.children).indexOf(preview);
         // opacity ~ 0.2 (33 for hex)
     });
 
@@ -252,6 +250,7 @@ colorPickerInputs.forEach(element => {
 
 resetColorBtn.addEventListener("click", () => {
     selectedColor = "rgb(34, 34, 34)";
+    selectedColorId = null;
     resetColor();
 });
 
