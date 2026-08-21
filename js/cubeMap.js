@@ -52,24 +52,31 @@ const faceData = [
     },
 ]
 
-function initMap(){
+function initMap(cubeId, colored, coloredStickersList){
     const tempMap = Array();
 
     // Create the six cube faces.
     // Each face contains nine stickers.
     for (let i = 0; i < 6; i++) {
-        tempMap.push(Array.from({ length: 9 }, () => ({
-            "color": colors[i],
-            "colorId": i
-        })));      
+        tempMap.push(Array())
+        for (let j = 0; j < 9; j++) {
+            tempMap[i].push({
+                color: coloredStickersList.includes(j) ?
+                colors[i].color :
+                "rgb(34, 34, 34)",
+                colorId: coloredStickersList.includes(j) ?
+                i :
+                null,
+            })
+        }
     }
 
-    fillMap(tempMap)
-    updateBackground(tempMap, true)
+    fillMap(tempMap, cubeId)
+    updateBackground(tempMap, colored, coloredStickersList)
     return tempMap
 }
 
-function fillMap(map){
+function fillMap(map, cubeId){
     // Each sticker needs additional metadata:
     // - its piece type (corner, edge, center),
     // - the cube it belongs to,
@@ -94,10 +101,10 @@ function fillMap(map){
             
             // Store orientation information.
             map[i][j]["pos"]   = faceData[i].pos;      
-            map[i][j]["index"] = faceData[i].index;  
+            map[i][j]["index"] = faceData[i].index; 
             
             // Store a direct reference to the DOM face.
-            map[i][j]["obj"]   = document.querySelector(`#c${map[i][j].cube} .face:nth-child(${faceAxis[map[i][j].pos][map[i][j].index]})`);      
+            map[i][j]["obj"]   = document.querySelector(`${cubeId} #c${map[i][j].cube} .face:nth-child(${faceAxis[map[i][j].pos][map[i][j].index]})`);      
         }
     }
 }
@@ -125,19 +132,28 @@ function createMainCube(container){
 createMainCube(mainCube)
 createMainCube(scanBoxCube)
 
-export let cubeMap = initMap();
+export let cubeMap = initMap("#mainCube", true, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+export let scanBoxMap = initMap("#scanBox", true, [4]);
 
-export function resetMap(){
-    cubeMap = initMap();
+export function resetMap(map, cubeId, colored, coloredStickersList){
+    map = initMap(cubeId, colored, coloredStickersList);
 }
 
-export function updateBackground(map, changeObj){
+export function updateBackground(map, colored, coloredStickersList){
     // Synchronize every sticker color with the
     // current color configuration.
+    const allStickersColored = coloredStickersList.length === 9;
     for (let i = 0; i < 6; i++) {
         for (let j = 0; j < 9; j++) {
-            map[i][j].color = colors[map[i][j].colorId].color
-            if (changeObj){
+            if (map[i][j].colorId !== null){
+                map[i][j].color = colors[map[i][j].colorId].color
+            }
+            if (
+                colored && (
+                    allStickersColored 
+                    || coloredStickersList.includes(j)
+                )
+            ){
                 map[i][j].obj.style.backgroundColor = map[i][j].color
             }
         }
