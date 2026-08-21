@@ -22,6 +22,12 @@
     color: white;
 }
 
+.tools .scan{
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: var(--padding-size);
+}
+
 .tools .scan button{
     background-color: rgba(34, 34, 34, 0.2);
     height: var(--moves-button-size);
