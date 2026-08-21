@@ -63,12 +63,12 @@ export function updateColor(){
         colors[i].color = colorsEl.querySelector(`span:nth-of-type(${i+1}) input`).value;
         colorsEl.querySelector(`span:nth-of-type(${i + 1})`).style.backgroundColor = colors[i].color;
     }
-    updateBackground(cubeMap, true);
+    updateBackground(cubeMap, true, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
 }
 
 export function resetColor(){
     colors = initColor();
-    updateBackground(cubeMap, true);
+    updateBackground(cubeMap, true, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
 }
 
 export function getFacesColors(map) {
