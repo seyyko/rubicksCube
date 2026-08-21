@@ -5,7 +5,7 @@ import { renderMap } from "./cubeRenderer.js"
 import { wait } from "./shuffle.js";
 
 // exemple of input in script.js
-export async function layerMove(name, direction, map, nbRotation=1, animationDuration=0, changeBg=false){
+export async function layerMove(name, direction, map, nbRotation=1, animationDuration=0, colored=false){
     const promises = [];
 
     if (animationDuration > 0){
@@ -18,17 +18,17 @@ export async function layerMove(name, direction, map, nbRotation=1, animationDur
 
     for (let i = 0; i < name.length; i++) {
         promises.push(
-            executeLayerMove(name[i], parseInt(direction[i]), map, parseInt(nbRotation), animationDuration, changeBg)
+            executeLayerMove(name[i], parseInt(direction[i]), map, parseInt(nbRotation), animationDuration, colored)
         );
     }
 
     await Promise.all(promises);
 
-    if (changeBg) {
+    if (colored) {
         layer.className = "layer";
-        updateBackground(map, true);
+        updateBackground(map, true, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
     } else {
-        updateBackground(map, false);
+        updateBackground(map, false, []);
     }
 }
 
@@ -413,19 +413,19 @@ export function getOptimalMove(faceName, pieceName, cubePos, targetPos){
     }
 }
 
-export async function executeMoves(moves, movesSource, map, history, panel=null, animationDuration=0, changeBg=false){
+export async function executeMoves(moves, movesSource, map, history, panel=null, animationDuration=0, colored=false){
     for (let i = 0; i < moves.length; i++) {
         let move = getMoveParameters(moves[i]);
         addMove(moves[i],
             typeof(movesSource) === "string" ? movesSource : movesSource[i],
             history,
             panel)
-        await layerMove(move[0], move[1], map, move[2], animationDuration, changeBg)
+        await layerMove(move[0], move[1], map, move[2], animationDuration, colored)
     }
 }
 
-export async function executeMove(moveName, moveSource, map, history, panel=null, animationDuration=0, changeBg=false){
+export async function executeMove(moveName, moveSource, map, history, panel=null, animationDuration=0, colored=false){
     let move = getMoveParameters(moveName);
     addMove(moveName, moveSource, history, panel)
-    await layerMove(move[0], move[1], map, move[2], animationDuration, changeBg)
+    await layerMove(move[0], move[1], map, move[2], animationDuration, colored)
 }
