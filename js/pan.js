@@ -1,4 +1,6 @@
-import { selectedColor } from "./eventHandler.js";
+import { selectedColor, selectedColorId } from "./eventHandler.js";
+import { cubeToFaces, faceToLayer } from "./layerHandler.js";
+import { scanBoxMap } from "./cubeMap.js";
 
 const canvas = document.querySelector("#canvas");
 const mainCube = document.querySelector("#mainCube");
@@ -71,6 +73,27 @@ canvas.addEventListener("pointermove", e => {
 canvas.addEventListener("pointerup", e => {
     if (!drag && clickedFace) {
         clickedFace.style.backgroundColor = selectedColor;
+        const position =
+        Array.from(clickedFace.parentElement.children).indexOf(clickedFace) + 1;
+        
+        const cube = parseInt(clickedFace.parentElement.id.slice(1));
+        const layerData = cubeToFaces[cube][position];
+        const face = faceToLayer[layerData[0]];
+        const piece = layerData[1];
+
+        for (let i = 0; i < scanBoxMap.length; i++) {
+            for (let j = 0; j < scanBoxMap[i].length; j++) {
+                if (
+                    layerData[0] === i
+                    && layerData[1] === j
+                ){
+                    scanBoxMap[i][j].color = selectedColor;
+                    scanBoxMap[i][j].colorId = selectedColorId;
+                }
+            }
+        }
+
+        console.log("\nface:", face, "\npiece", piece)
     }
 
     pointerDown = false;
