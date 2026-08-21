@@ -37,7 +37,7 @@ function isNeighborsAligned(face, centerFaceId){
     }
 }
 
-export async function upperCross(map, history, panel=null, animationDuration=0, changeBg=false){
+export async function upperCross(map, history, panel=null, animationDuration=0, colored=false){
     const upperLayer = map[1];
     let facesColors = getFacesColors(map);
     
@@ -50,7 +50,7 @@ export async function upperCross(map, history, panel=null, animationDuration=0, 
         if (neighborsCount === 0){
             console.log("#upperCross# 0 neighbor (only the center)")
             move = ["F", "R", "U", "R'", "U'", "F'", "y2"];
-            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
             facesColors = getFacesColors(map);
         }else{
             console.log("#upperCross# 2 neighbor (either L shape or straight line)")
@@ -62,11 +62,11 @@ export async function upperCross(map, history, panel=null, animationDuration=0, 
                 ){
                     console.log("#upperCross# neighbors are aligned but in the wrong direction");
                     move = "U";
-                    await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                    await executeMove(move, "solver", map, history, panel, animationDuration, colored);
                 }
                 console.log("#upperCross# neighbors are correctly aligned");
                 move = ["F", "R", "U", "R'", "U'", "F'"];
-                await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+                await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
                 facesColors = getFacesColors(map);
                 
             }else{
@@ -76,11 +76,11 @@ export async function upperCross(map, history, panel=null, animationDuration=0, 
                 ){
                     console.log("#upperCross# neighbors are in a L shape (correct direction)");
                     move = ["F", "R", "U", "R'", "U'", "R", "U", "R'", "U'", "F'"];
-                    await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+                    await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
                 }else{
                     console.log("#upperCross# neighbors are in a L shape (wrong direction)");
                     move = "U";
-                    await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                    await executeMove(move, "solver", map, history, panel, animationDuration, colored);
                 }
                 facesColors = getFacesColors(map);
             }

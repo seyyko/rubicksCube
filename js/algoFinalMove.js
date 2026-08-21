@@ -15,7 +15,7 @@ function getAlgoDirection(map, crossColor){
     return cornerRightColor === crossColor;
 }
 
-export async function finalMove(map, history, panel=null, animationDuration=0, changeBg=false){
+export async function finalMove(map, history, panel=null, animationDuration=0, colored=false){
     // algorithm: R U R' U'
     // reversed: U R U' R'
     const cornersCube = [9, 27, 25, 7];
@@ -43,11 +43,11 @@ export async function finalMove(map, history, panel=null, animationDuration=0, c
                 console.log("#finalMoveSet# the algorithm is 2 reversed Sexy move (U R U' R').");
                 move = ["U", "R", "U'", "R'", "U", "R", "U'", "R'"];
             }
-            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
         }
         console.log("#finalMoveSet# do D' then, we check the next corner.");
         move = "D'";
-        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
         
         facesColors = getFacesColors(map);
         corners = cornersCube.map(cube => isCornerPlaced(map, cube, 5, facesColors.downCenter))
@@ -63,7 +63,7 @@ export async function finalMove(map, history, panel=null, animationDuration=0, c
     {
         console.log("#finalMoveSet# down face aligned ?", facesColors.frontEdgeDown === facesColors.frontCenter);
         move = "D"
-        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
         facesColors = getFacesColors(map);
     }
     

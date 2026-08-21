@@ -90,7 +90,7 @@ function getCornerData(map, cornersCube, target, faces) {
     return howManyCornerPlaced(cornersStickers, colors);
 }
 
-export async function matchingUpperEdges(map, history, panel=null, animationDuration=0, changeBg=false){
+export async function matchingUpperEdges(map, history, panel=null, animationDuration=0, colored=false){
     // algorithm : R U R' U R U'2 R'
     // turn the upper face until 2 colors are correctly placed.
     // 2 cases:
@@ -121,7 +121,7 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
 
     while (count < 2){
         move = "U";
-        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
         
         facesColors = getFacesColors(map);
         [count, boolCount] = getEdgeData(map, edgesCube, facesColors.upperCenter);
@@ -149,7 +149,7 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
             !(boolCount[frontEdgeCubesId])
         ){
             move = "y";
-            await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMove(move, "solver", map, history, panel, animationDuration, colored);
 
                 facesColors = getFacesColors(map);
                 [count, boolCount] = getEdgeData(map, edgesCube, facesColors.upperCenter);
@@ -157,14 +157,14 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
         console.log("#matchingUpperEdges# edges are correctly placed.");
         console.log("#matchingUpperEdges# do: algorithm + y' + algorithm again.");
         move = ["R", "U", "R'", "U", "R", "U'2", "R'", "y'", "R", "U", "R'", "U", "R", "U'2", "R'"];
-        await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
     }else{
         console.log("#matchingUpperEdges# repeat 'y' until edges are correctly placed.");
         while(
             !(boolCount[0] && boolCount[2])
         ){
             move = "y";
-            await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMove(move, "solver", map, history, panel, animationDuration, colored);
 
             facesColors = getFacesColors(map);
             [count, boolCount] = getEdgeData(map, edgesCube, facesColors.upperCenter);
@@ -172,16 +172,16 @@ export async function matchingUpperEdges(map, history, panel=null, animationDura
         console.log("#matchingUpperEdges# edges are correctly placed.");
         console.log("#matchingUpperEdges# do: algorithm");
         move = ["R", "U", "R'", "U", "R", "U'2", "R'"];
-        await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
     }
 
     console.log("#matchingUpperEdges# finish with 'U'.");
     move = "U";
-    await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+    await executeMove(move, "solver", map, history, panel, animationDuration, colored);
 }
 
 
-export async function matchingUpperCorners(map, history, panel=null, animationDuration=0, changeBg=false){
+export async function matchingUpperCorners(map, history, panel=null, animationDuration=0, colored=false){
     // algorithm : L' U R U' L U R' U'
     // do 'y' 4 times,
     // each time see if the corner between the front and right face
@@ -218,7 +218,7 @@ export async function matchingUpperCorners(map, history, panel=null, animationDu
             console.log("#matchingUpperCorner# do 'y' until the corner is between the front and right faces.");
             while (!boolCount[0]){
                 move = "y";
-                await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                await executeMove(move, "solver", map, history, panel, animationDuration, colored);
                 
                 facesColors = getFacesColors(map);
                 [count, boolCount] = getCornerData(map, cornersCube, facesColors.upperCenter, facesOrder);
@@ -226,14 +226,14 @@ export async function matchingUpperCorners(map, history, panel=null, animationDu
             console.log("#matchingUpperCorner# corner is correctly placed.");
             console.log("#matchingUpperCorner# execute the algorithm.");
             move = ["L'", "U", "R", "U'", "L", "U", "R'", "U'"];
-            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
             
             facesColors = getFacesColors(map);
             [count, boolCount] = getCornerData(map, cornersCube, facesColors.upperCenter, facesOrder);
         }else{
             console.log("#matchingUpperCorner# no corner are correctly placed, then do the algorithm (to create a corner).");
             move = ["L'", "U", "R", "U'", "L", "U", "R'", "U'"];
-            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
             
             facesColors = getFacesColors(map);
             [count, boolCount] = getCornerData(map, cornersCube, facesColors.upperCenter, facesOrder);
@@ -241,5 +241,5 @@ export async function matchingUpperCorners(map, history, panel=null, animationDu
     }
     console.log("#matchingUpperCorner# finish with 'x2' to turn the cube.");
     move = "x2";
-    await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+    await executeMove(move, "solver", map, history, panel, animationDuration, colored);
 }

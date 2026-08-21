@@ -69,7 +69,7 @@ export function getSlotState(map, target){
     return temp;
 }
 
-export async function invertedTCase(map, history, panel=null, animationDuration=0, changeBg=false){
+export async function invertedTCase(map, history, panel=null, animationDuration=0, colored=false){
     for (let i = 0; i < 4; i++) {
         let facesColors = getFacesColors(map);
         let corner;
@@ -115,7 +115,7 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
                 console.log("#invertedTCase# corner contain the left face.");
                 move = moveOrder[1];
             }
-            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
             facesColors = getFacesColors(map);
         }
 
@@ -134,7 +134,7 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
         console.log("#invertedTCase# once all corners are on the upper face, we move the upper face until the top right corner fit.");
         move = getOptimalMove("upperLayer", "corner", cornerCube, 3);
         if (move.length > 0){
-            await executeMove(move, "solver", map, history, panel, animationDuration, changeBg)
+            await executeMove(move, "solver", map, history, panel, animationDuration, colored)
             facesColors = getFacesColors(map);
         }
 
@@ -159,18 +159,18 @@ export async function invertedTCase(map, history, panel=null, animationDuration=
         }
 
         for (let j = 0; j < loop; j++) {
-            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg)
+            await executeMoves(move, "solver", map, history, panel, animationDuration, colored)
             facesColors = getFacesColors(map);
         }
 
         console.log("#invertedTCase# once the corner is placed we move the cube 'y'.");
         move = "y";
-        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
         facesColors = getFacesColors(map);
     }
 }
 
-export async function edgeParking(map, history, panel=null, animationDuration=0, changeBg=false) {
+export async function edgeParking(map, history, panel=null, animationDuration=0, colored=false) {
     for (let i = 0; i < 4; i++) {
         let facesColors = getFacesColors(map);
         let boolEdgeSlots = getSlotState(map, facesColors.upperCenter);
@@ -200,19 +200,19 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
                     break;
                 }
                 console.log("#edgeParking# we move the upper face until the 2nd slot is empty.");
-                await executeMove("U", "solver", map, history, panel, animationDuration, changeBg);
+                await executeMove("U", "solver", map, history, panel, animationDuration, colored);
                 facesColors = getFacesColors(map);
                 boolEdgeSlots = getSlotState(map, facesColors.upperCenter);
             }
             // slot2 is empty, now we put the edge on the upper face.
             console.log("#edgeParking# once the 2nd slot is empty we do the algorithm.");
             move = ["R", "U'", "R'", "U'", "F'", "U", "F"]
-            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
             facesColors = getFacesColors(map);
         }
         console.log("#edgeParking# and we finally rotate the cube 'y'.");
         move = "y";
-        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
         facesColors = getFacesColors(map);
     }
 
@@ -251,19 +251,19 @@ export async function edgeParking(map, history, panel=null, animationDuration=0,
             target = edgeUpperColor === facesColors.frontCenter ? 12 : 2;
             move = getOptimalMove("upperLayer", "edge", edgeCube, target);
             if (move.length > 0){
-                await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                await executeMove(move, "solver", map, history, panel, animationDuration, colored);
                 facesColors = getFacesColors(map);
             }
             console.log("#edgeParking# if that's the case then, we rotate the upper face until the edge is aligned with the face.");
             console.log("#edgeParking# then do the algorithm.");
             move = target === 12 ? ["U'", "F'", "U", "F", "U", "R", "U'", "R'"] : ["U", "R", "U'", "R'", "U'", "F'", "U", "F"];
-            await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+            await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
             facesColors = getFacesColors(map);
         }
 
         console.log("#edgeParking# and we finally rotate the cube 'y' (all edge should be placed).");
         move = "y";
-        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
         facesColors = getFacesColors(map);
     }
 }

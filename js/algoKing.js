@@ -80,7 +80,7 @@ function isKing(centerColor, king, map){
     }
 }
 
-export async function kingAlgorithm(map, history, panel=null, animationDuration=0, changeBg=false){    
+export async function kingAlgorithm(map, history, panel=null, animationDuration=0, colored=false){    
     for (let i = 0; i < 4; i++) {
         const neighbors = [0, 1, 4];
         const edgesCube = [1, 3, 5, 7]
@@ -145,11 +145,11 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     facesColors[faceEdgePairs[face][0].split(/(?=[A-Z])/)[0] + "Center"]
                 ){
                     move = faces[i][0].toUpperCase();
-                    await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                    await executeMove(move, "solver", map, history, panel, animationDuration, colored);
                     facesColors = getFacesColors(map);
                 }
                 if (faceEdgePairs[face][4]){
-                    await executeMove(faceEdgePairs[face][4], "solver", map, history, panel, animationDuration, changeBg);  
+                    await executeMove(faceEdgePairs[face][4], "solver", map, history, panel, animationDuration, colored);  
                 }
                 return;
             }
@@ -172,7 +172,7 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
 
                         otherFace = edgeFaces[0] === 0 ? edgeFaces[1] : edgeFaces[0];
                         move = `${faceToLayer[otherFace][0].toUpperCase()}2`;
-                        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
                         facesColors = getFacesColors(map);
                     } else if (!isKing(facesColors.frontCenter, king, map)){
                         console.log("#kingAlgorithm# the edge is between the front and upper face and front is not the king.");
@@ -197,7 +197,7 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     move = getOptimalMove("upperLayer", "edge", edgeCube, target);
                     console.log("function getOptimalMove:", move);
                     if (move.length > 0){
-                        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
                         facesColors = getFacesColors(map);
                     }
 
@@ -211,7 +211,7 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     move = getOptimalMove("backLayer", "edge", edgeCube, 20)
                     console.log("function getOptimalMove:", move);
                     if (move.length > 0){
-                        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+                        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
                         facesColors = getFacesColors(map);
                     }
 
@@ -219,7 +219,7 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                         console.log("#kingAlgorithm# then execute: B L U' L'");
 
                         move = ["B", "L", "U'", "L'"]
-                        await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+                        await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
                         facesColors = getFacesColors(map);
                         running = false;
                     }
@@ -235,18 +235,18 @@ export async function kingAlgorithm(map, history, panel=null, animationDuration=
                     console.log("#kingAlgorithm# execute: D B D'");
                     move = ["D", "B", "D'"]
                 }
-                await executeMoves(move, "solver", map, history, panel, animationDuration, changeBg);
+                await executeMoves(move, "solver", map, history, panel, animationDuration, colored);
                 facesColors = getFacesColors(map);
             }
         }
         console.log("#kingAlgorithm# edge is correctly placed, execute z'")
 
         move = "z'";
-        await executeMove(move, "solver", map, history, panel, animationDuration, changeBg);
+        await executeMove(move, "solver", map, history, panel, animationDuration, colored);
         facesColors = getFacesColors(map);
         console.log("\n\n\n")
     }
 
     console.log("#kingAlgorithm# cross is done execute x' to put the cross down.")
-    await executeMove("x'", "solver", map, history, panel, animationDuration, changeBg);  
+    await executeMove("x'", "solver", map, history, panel, animationDuration, colored);  
 }
