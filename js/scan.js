@@ -1,5 +1,5 @@
 import { colors } from "./colors.js";
-import { getPieceByFaceId, getStickersByCube, scanBoxMap } from "./cubeMap.js";
+import { getStickersByCube, scanBoxMap } from "./cubeMap.js";
 import { faceToLayer } from "./layerHandler.js";
 import { createPopup } from "./popup.js";
 
