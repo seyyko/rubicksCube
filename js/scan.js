@@ -6,7 +6,6 @@ import { createPopup } from "./popup.js";
 const scanBox = document.getElementById("scanBox");
 const scanBoxBtn = document.querySelector(".tools .scan button:nth-of-type(1)");
 const scanBoxCheckBtn = document.querySelector(".tools .scan button:nth-of-type(2)");
-const scanBoxCube = scanBox.querySelector(".cubeContainer");
 
 const mainCanvas = [
     document.querySelector("#canvas #mainCube"),
