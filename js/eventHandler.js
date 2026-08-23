@@ -275,9 +275,12 @@ historyPanel.addEventListener("click", (event) => {
         .join(", ");
 
     createPopup(
-    "Are you sure you want to delete this following group ?",
-    ["GROUP ID:", groupId],
-    ["GROUP CHILDREN:", groupChildren])
+        "historyPopup",
+        "Are you sure you want to delete this following group ?",
+        ["GROUP ID:", groupId],
+        ["GROUP CHILDREN:", groupChildren],
+        ["yes", "no"]
+    )
     popup.style.display = "grid";
 });
 
@@ -285,13 +288,14 @@ popup.addEventListener("click", async (e) => {
     const button = e.target.closest("button");
 
     if (!button) return;
-
-    if (button.textContent === "yes") {
-        resetAlgoMoves()
-        await deleteGroup(history, historyPanel, parseInt(selectedGroup.id));
+    if (Array.from(button.classList).includes("noBtn")) {
+        popup.style.display = "none";
+        return;
     }
+    if (!Array.from(popup.classList).includes("historyPopup")) return;
 
-    popup.style.display = "none";
+    resetAlgoMoves()
+    await deleteGroup(history, historyPanel, parseInt(selectedGroup.id));
 });
 
 playbackControls.querySelectorAll("button").forEach(element => {
