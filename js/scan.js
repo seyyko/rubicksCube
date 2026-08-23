@@ -1,5 +1,5 @@
 import { colors } from "./colors.js";
-import { getStickersByCube, scanBoxMap } from "./cubeMap.js";
+import { cubeMap, getStickersByCube, scanBoxMap, updateBackground } from "./cubeMap.js";
 import { faceToLayer } from "./layerHandler.js";
 import { createPopup } from "./popup.js";
 
@@ -29,16 +29,17 @@ scanBoxBtn.addEventListener("click", () => {
     isScanBoxShowed = !isScanBoxShowed
 });
 
-function reportError(title, id, desc, btns){
+async function reportError(title, id, desc, btns){
     const popup = document.getElementById("popup");
-    createPopup("errorPopup",
+    
+    const result = await createPopup("errorPopup",
         title,
         id,
         desc,
         btns
     )
-    popup.style.display = "grid";
     console.log("A popup of that error has been successfully created.")
+    return result
 }
 
 function validateCenters(map){
@@ -185,7 +186,7 @@ function validateCornersTwisted(map){
     return [score % 3 === 0, score % 3, tempObj]
 }
 
-scanBoxCheckBtn.addEventListener("click", () => {
+scanBoxCheckBtn.addEventListener("click", async () => {
     const originalColor = "rgb(34, 34, 34)";
     let sbMap = scanBoxMap;
     let error = false;
@@ -205,9 +206,9 @@ scanBoxCheckBtn.addEventListener("click", () => {
         ];
         const desc = ["share the same center color:", duplicateCenters
             .map(face => colors[face[0]].color).join("; ")];
-        const btns = ["", "ok"];
+        const btns = [null, "ok"];
 
-        reportError(title, id, desc, btns)
+        await reportError(title, id, desc, btns)
         return;
     }else{
         console.log("Center colors are valid.");
@@ -226,8 +227,8 @@ scanBoxCheckBtn.addEventListener("click", () => {
             .map(([key, array]) => `${faceToLayer[key][0].toUpperCase()}(${array.join(", ")})`)
             .join("; ")
         ];
-        const btns = ["", "ok"];
-        reportError(title, id, desc, btns)
+        const btns = [null, "ok"];
+        await reportError(title, id, desc, btns)
         return;
     }else if (!colorCountTest[0]){
         const title = `The cube must contain exactly 9 stickers of each color.`
@@ -243,8 +244,8 @@ scanBoxCheckBtn.addEventListener("click", () => {
             .join("; ")
         ];
         const desc = null
-        const btns = ["", "ok"];
-        reportError(title, id, desc, btns)
+        const btns = [null, "ok"];
+        await reportError(title, id, desc, btns)
         return;
     }else{
         console.log("Color counts are valid.");
@@ -260,8 +261,8 @@ scanBoxCheckBtn.addEventListener("click", () => {
             .join("; ")
         ];
         const desc = ["I / D:", "Invalid (duplicate colors) / Duplicated (duplicate pieces)"]
-        const btns = ["", "ok"];
-        reportError(title, id, desc, btns)
+        const btns = [null, "ok"];
+        await reportError(title, id, desc, btns)
         return;
     }else{
         console.log("Pieces colors are valid.");
@@ -280,10 +281,30 @@ scanBoxCheckBtn.addEventListener("click", () => {
             "FUR corner", 
             "is the corner between the Front, Upper and Right faces (the closest corner to you after resetting the position)."
         ];
-        const btns = ["", "ok"];
-        reportError(title, id, desc, btns)
+        const btns = [null, "ok"];
+        await reportError(title, id, desc, btns)
         return;
     }
 
+    const result = await createPopup(
+        "scan",
+        "Are you sure you want to replace the main cube with your scan ?",
+        null,
+        null,
+        ["yes", "no"]
+    );
+
     console.log("scan is ready to use !")
+    console.log("do you want to update the main cube with this scan ?", result)
+
+    if (result){
+        cubeMap.forEach((face, i) => {
+            face.forEach((sticker, j) => {
+                sticker.color = scanBoxMap[i][j].color;
+                sticker.colorId = scanBoxMap[i][j].colorId;
+            });
+        });
+        updateBackground(cubeMap, true, [0, 1, 2, 3, 4, 5, 6, 7, 8])
+        console.log("main cube is updated with the scan")
+    }
 })
