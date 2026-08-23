@@ -263,7 +263,7 @@ debugInput.addEventListener("click", () => {
     else mainCube.classList.remove("showCell");
 })
 
-historyPanel.addEventListener("click", (event) => {
+historyPanel.addEventListener("click", async (event) => {
     const button = event.target.closest("button");
 
     if (!button) return;
@@ -274,28 +274,17 @@ historyPanel.addEventListener("click", (event) => {
         .map(child => child.textContent)
         .join(", ");
 
-    createPopup(
+    const result = await createPopup(
         "historyPopup",
         "Are you sure you want to delete this following group ?",
         ["GROUP ID:", groupId],
         ["GROUP CHILDREN:", groupChildren],
         ["yes", "no"]
     )
-    popup.style.display = "grid";
-});
-
-popup.addEventListener("click", async (e) => {
-    const button = e.target.closest("button");
-
-    if (!button) return;
-    if (Array.from(button.classList).includes("noBtn")) {
-        popup.style.display = "none";
-        return;
+    if (result) {
+        resetAlgoMoves()
+        await deleteGroup(history, historyPanel, parseInt(selectedGroup.id));
     }
-    if (!Array.from(popup.classList).includes("historyPopup")) return;
-
-    resetAlgoMoves()
-    await deleteGroup(history, historyPanel, parseInt(selectedGroup.id));
 });
 
 playbackControls.querySelectorAll("button").forEach(element => {
