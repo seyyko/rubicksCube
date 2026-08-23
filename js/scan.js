@@ -1,11 +1,12 @@
 import { colors } from "./colors.js";
 import { getPieceByFaceId, getStickersByCube, scanBoxMap } from "./cubeMap.js";
 import { faceToLayer } from "./layerHandler.js";
+import { createPopup } from "./popup.js";
 
 const scanBox = document.getElementById("scanBox");
 const scanBoxBtn = document.querySelector(".tools .scan button:nth-of-type(1)");
 const scanBoxCheckBtn = document.querySelector(".tools .scan button:nth-of-type(2)");
-// const scanBoxCube = scanBox.querySelector(".cubeContainer");
+const scanBoxCube = scanBox.querySelector(".cubeContainer");
 
 const mainCanvas = [
     document.querySelector("#canvas #mainCube"),
@@ -42,8 +43,16 @@ scanBoxBtn.addEventListener("click", () => {
     isScanBoxShowed = !isScanBoxShowed
 });
 
-function reportError(error){
-    console.log(error)
+function reportError(title, id, desc, btns){
+    const popup = document.getElementById("popup");
+    createPopup("errorPopup",
+        title,
+        id,
+        desc,
+        btns
+    )
+    popup.style.display = "grid";
+    console.log("A popup of that error has been successfully created.")
 }
 
 function validateCenters(map){
@@ -117,12 +126,14 @@ function validatePieces(map) {
         const code = colorIds.join("");
 
         if (new Set(colorIds).size !== colorIds.length) {
-            duplicatePieces.push([i, code, "contains duplicate colors."]);
+            // invalid composition.
+            duplicatePieces.push([i, code, "I"]);
             continue;
         }
 
         if (pieceSet.has(code)) {
-            duplicatePieces.push([i, code, "exists more than once."]);
+            // duplicated composition.
+            duplicatePieces.push([i, code, "D"]);
             continue;
         }
 
@@ -166,7 +177,6 @@ function validateCornersTwisted(map){
             const upperSticker = upperCornersFaces[i][1][j]
             
             if (layersColor.includes(map[upperFace][upperSticker].colorId)){
-                console.log(`corner ${i} value:`, j)
                 tempObj[upperCornersCube[i]] = j
                 score += j;
                 break;
@@ -179,7 +189,6 @@ function validateCornersTwisted(map){
             const downSticker = downCornersFaces[i][1][j]
             
             if (layersColor.includes(map[downFace][downSticker].colorId)){
-                console.log(`corner ${i} value:`, j)
                 tempObj[downCornersCube[i]] = j
                 score += j;
                 break;
@@ -201,17 +210,19 @@ scanBoxCheckBtn.addEventListener("click", () => {
 
     if (!centersTest[0]) {
         const duplicateCenters = centersTest[1];
-        reportError(`Each face must have a different center color.`);
-        for (let i = 0; i < duplicateCenters.length; i++) {
-            const faceNames = duplicateCenters[i][1]
-            .map(face => faceToLayer[face].replace("Layer", ""))
-            .join(", ");
-            reportError(
-                `Faces ${faceNames} share the same center colorId ${
-                    duplicateCenters[i][0]
-                }.`
-            );
-        }
+        const title = `Each face must have a different center color.`;
+        const id = ["Faces:", duplicateCenters
+            .map(face => face[1]
+                .map(name => faceToLayer[name].replace("Layer", ""))
+                .join(", ")
+            ).join("; ")
+        ];
+        const desc = ["share the same center color:", duplicateCenters
+            .map(face => colors[face[0]].color).join("; ")];
+        const btns = ["", "ok"];
+
+        reportError(title, id, desc, btns)
+        return;
     }else{
         console.log("Center colors are valid.");
     }
@@ -220,29 +231,35 @@ scanBoxCheckBtn.addEventListener("click", () => {
     console.log(colorCountTest)
 
     if (colorCountTest.length === 3){
-        reportError(`There are uncolored stickers.`);
-        Object.entries(colorCountTest[2]).forEach(
-            ([key, array]) => {
-                reportError(
-                    `Face ${faceToLayer[key].replace("Layer", "")} has ${array.length} uncolored sticker(s) at positions: ${array.join(", ")}.`
-                );
-            }
-        );
+        const title = `There are uncolored stickers.`
+        const id = ["Face(s)(missing sticker):", Object.entries(colorCountTest[2])
+            .map(([key, array]) => `${faceToLayer[key].replace("Layer", "")}(${array.length})`)
+            .join("; ")
+        ];
+        const desc = ["position(s):", Object.entries(colorCountTest[2])
+            .map(([key, array]) => `${faceToLayer[key][0].toUpperCase()}(${array.join(", ")})`)
+            .join("; ")
+        ];
+        const btns = ["", "ok"];
+        reportError(title, id, desc, btns)
+        return;
     }else if (!colorCountTest[0]){
-        reportError(`The cube must contain exactly 9 stickers of each color.`);
-        Object.entries(colorCountTest[1]).forEach(
-            ([key, nb]) => {
+        const title = `The cube must contain exactly 9 stickers of each color.`
+        const id = ["Color(s)(+/- stickers):", Object.entries(colorCountTest[1])
+            .map(([key, nb]) => {
                 if (nb > 9) {
-                    reportError(
-                        `Color "${colors[key].color}" (colorId: ${key}) has ${nb - 9} too many sticker(s).`
-                    );
+                    return `"${colors[key].color}"(+${nb - 9})`;
                 } else if (nb < 9) {
-                    reportError(
-                        `Color "${colors[key].color}" (colorId: ${key}) is missing ${9 - nb} sticker(s).`
-                    );
+                    return `"${colors[key].color}"(-${9 - nb})`;
                 }
-            }
-        );
+            })
+            .filter(Boolean)
+            .join("; ")
+        ];
+        const desc = null
+        const btns = ["", "ok"];
+        reportError(title, id, desc, btns)
+        return;
     }else{
         console.log("Color counts are valid.");
     }
@@ -251,10 +268,15 @@ scanBoxCheckBtn.addEventListener("click", () => {
     console.log(piecesTest)
 
     if (!piecesTest[0]){
-        reportError(`Some pieces have invalid color combinations or are duplicated.`);
-        for (let i = 0; i < piecesTest[1].length; i++) {
-            reportError(`piece at cube: ${piecesTest[1][i][0]} ${piecesTest[1][i][2]}`);
-        }
+        const title = `Some pieces have invalid color combinations or are duplicated.`
+        const id = ["cube(I/D):", piecesTest[1]
+            .map(piece => `${piece[0]}(${piece[2]})`)
+            .join("; ")
+        ];
+        const desc = ["I / D:", "Invalid (duplicate colors) / Duplicated (duplicate pieces)"]
+        const btns = ["", "ok"];
+        reportError(title, id, desc, btns)
+        return;
     }else{
         console.log("Pieces colors are valid.");
     }
@@ -263,12 +285,19 @@ scanBoxCheckBtn.addEventListener("click", () => {
     console.log(cornerTwist);
 
     if (!cornerTwist[0]){
-        reportError(`Your cube has a twisted corner.`);
-        reportError(`Twist the FUR corner ${
-            cornerTwist[1] === 1 ?
+        const title = `Your cube has a twisted corner.`
+        const id = ["Twist the FUR corner: ", `${cornerTwist[1] === 1 ?
             'anti clockwise':
-            'clockwise'
-        }`);
+            'clockwise'}`
+        ];
+        const desc = [
+            "FUR corner", 
+            "is the corner between the Front, Upper and Right faces (the closest corner to you after resetting the position)."
+        ];
+        const btns = ["", "ok"];
+        reportError(title, id, desc, btns)
+        return;
     }
 
+    console.log("scan is ready to use !")
 })
