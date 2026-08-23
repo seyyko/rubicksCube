@@ -14,19 +14,6 @@ const mainCanvas = [
 
 export let isScanBoxShowed = false;
 
-function showScanDiv(){
-    scanBox.style.display = "grid";
-    mainCanvas.forEach(element => {
-        element.style.display = "none";
-    });
-}
-function hideScanDiv(){
-    mainCanvas.forEach(element => {
-        element.style.display = "grid";
-    });
-    scanBox.style.display = "none";
-}
-
 scanBoxBtn.addEventListener("click", () => {
     mainCanvas.forEach(element => {
         element.style.display = 
