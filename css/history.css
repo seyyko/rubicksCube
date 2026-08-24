@@ -27,7 +27,6 @@
     font-size: 2em;
     width: 2em;
     text-align: center;
-    /* padding-inline: var(--padding-size); */
 }
 #history>button:hover>p{
     background-color: transparent;
