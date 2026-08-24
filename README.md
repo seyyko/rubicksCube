@@ -44,6 +44,7 @@ Son record étant d'environ **20 à 35 secondes**, j'ai fixé un délai de **0,2
 ## Performances du site
 
 Le site a été testé avec **Google Lighthouse** afin d'évaluer ses performances sur mobile et ordinateur.
+[Voir les résultats du test Lighthouse](https://pagespeed.web.dev/analysis/https-seyyko-github-io-rubicksCube/ae1ty0uqpf?form_factor=mobile)
 
 | Indicateur | 📱 Mobile | 🖥️ Ordinateur |
 |:---|:---:|:---:|
