@@ -169,8 +169,9 @@
 
 .solvingDelay {
     display: grid;
-    grid-template-rows: auto calc(var(--moves-button-size) / 2);
+    grid-template-rows: auto calc(var(--moves-button-size) / 2) auto;
     background-color: rgba(34, 34, 34, .2);
+    gap: var(--padding-size)
 }
 
 .solvingDelay label{
@@ -196,6 +197,7 @@
     -webkit-appearance: none;
     background-color: transparent;
 
+    background-color: rgba(34, 34, 34, .2);
 }
 
 .solvingDelay input::-webkit-slider-thumb {
