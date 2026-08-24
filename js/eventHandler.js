@@ -1,6 +1,6 @@
-import { executeMove } from "./cubeRotation.js";
+import { executeMove, executeMoves } from "./cubeRotation.js";
 import { cubeMap, resetMap, scanBoxMap } from "./cubeMap.js";
-import { resetHistory, deleteGroup, opposite } from "./history.js";
+import { resetHistory, deleteGroup, opposite, moves } from "./history.js";
 import { shuffleCube, wait } from "./shuffle.js";
 import { updateColor, resetColor } from "./colors.js";
 import { history, historyPanel, animationDuration } from "./main.js";
@@ -34,6 +34,10 @@ const playbackControls = document.querySelector(".playbackControls");
 const solvingDelayInput = document.querySelector(".solvingDelay input");
 
 const solvingTimer = document.getElementById("timer");
+
+const customHistoryForm = document.querySelector(".customHistory");
+const customHistoryInput = document.querySelector(".customHistory input");
+const customHistoryBtn = document.querySelector(".customHistory button");
 
 let toolMode = false;
 
@@ -166,6 +170,15 @@ function finishTimer(){
     timerElapsed = 0;
 }
 
+function validateScramble(scramble){
+    for (let i = 0; i < scramble.length; i++) {
+        if (!moves[scramble[i]]){
+            return [false, scramble[i], i]
+        }
+    }
+    return [true]
+}
+
 // events
 
 movesButtons.forEach(element => {
@@ -173,9 +186,11 @@ movesButtons.forEach(element => {
         const moveName = element.textContent;
 
         disableBtns(movesButtons)
+        disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
         resetAlgoMoves();
         await executeMove(moveName, "user", cubeMap, history, historyPanel, animationDuration, true)
         enableBtns(movesButtons)
+        enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
     });
 });
 
@@ -189,11 +204,11 @@ resetCubeBtn.addEventListener("click", () => {
 
 shuffleCubeBtn.addEventListener("click", async () => {
     disableBtns(movesButtons)
-    disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+    disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
     resetAlgoMoves();
     await shuffleCube();
     enableBtns(movesButtons) 
-    enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+    enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
 });
 
 resolveBtn.addEventListener("click", () => {
@@ -291,7 +306,7 @@ playbackControls.querySelectorAll("button").forEach(element => {
     element.addEventListener("click", async () => {
         const btnName = element.classList[0];
         element.disabled = true;
-        disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+        disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
         disableBtns(movesButtons);
         switch (btnName) {
             case "previous":
@@ -311,7 +326,7 @@ playbackControls.querySelectorAll("button").forEach(element => {
                 break;
         }
         element.disabled = false;
-        enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+        enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
         enableBtns(movesButtons);
     })
 });
@@ -319,14 +334,14 @@ playbackControls.querySelectorAll("button").forEach(element => {
 solveBtn.addEventListener("click", async () => {
     if (algoMoves.length > 0) return;
 
-    disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+    disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
     disableBtns(movesButtons);
     resetTimer()
 
     algoMoves = await algorithm(cubeMap);
     moveDone = [];
 
-    enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn]);
+    enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
     enableBtns(movesButtons);
 
     if (algoMoves.length > 0) {
@@ -344,5 +359,26 @@ window.addEventListener("load", () => {
     document.querySelector(".solvingDelay label:nth-of-type(2)").textContent = `${solvingDelay / 1000}sec`;
 });
 
-
+customHistoryForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const scrambleText = customHistoryInput.value
+    const tempVal = scrambleText;
+    const scramble = scrambleText.trim().split(" ");
+    const result = validateScramble(scramble)
+    customHistoryInput.value = "";
+    if (!result[0]) {
+        customHistoryInput.placeholder = `Invalid move: ${result[1]} at pos ${result[2]}`;
+        await wait(1000);
+    } else {
+        customHistoryInput.placeholder = "Valid scramble!";
+        resetAlgoMoves()
+        disableBtns(movesButtons)
+        disableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
+        await executeMoves(scramble, "shuffle", cubeMap, history, historyPanel, animationDuration, true);
+        enableBtns(movesButtons)
+        enableBtns([solveBtn, resetCubeBtn, shuffleCubeBtn, customHistoryBtn]);
+    }
+    customHistoryInput.placeholder = "Enter your scramble";
+    customHistoryInput.value = tempVal;
+});
 
