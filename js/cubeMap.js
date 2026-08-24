@@ -1,4 +1,4 @@
-import { layers, layerToFace } from "./layerHandler.js"
+import { cubeToFaces, layers, layerToFace } from "./layerHandler.js"
 import { colors } from "./colors.js";
 
 const mainCube = document.getElementById("mainCube");
@@ -116,8 +116,11 @@ function createMainCube(container){
         cube.className = "cube";
 
         for (let j = 0; j < 6; j++) {
+            const stickerState = cubeToFaces[i][j+1] ?
+            "outer":
+            "inner"
             const face = document.createElement("div");
-            face.className = "face";
+            face.className = `face ${stickerState}`;
             cube.appendChild(face);
         }
 
