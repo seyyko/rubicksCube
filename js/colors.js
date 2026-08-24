@@ -5,28 +5,28 @@ import { updateBackground, cubeMap } from "./cubeMap.js";
 // used throughout the rendering of the cube map.
 const baseColors = [
     {
-        "color": "#ffffff",
-        "abbreviatedColor": "W"
+        color: "#f5f5f5",
+        abbreviatedColor: "W"
     },
     {
-        "color": "#ffa500",
-        "abbreviatedColor": "O"
+        color: "#ffb940",
+        abbreviatedColor: "O"
     },
     {
-        "color": "#0000ff",
-        "abbreviatedColor": "B"
+        color: "#4040ff",
+        abbreviatedColor: "B"
     },
     {
-        "color": "#008000",
-        "abbreviatedColor": "G"
+        color: "#409f40",
+        abbreviatedColor: "G"
     },
     {
-        "color": "#ffff00",
-        "abbreviatedColor": "Y"
+        color: "#ffff40",
+        abbreviatedColor: "Y"
     },
     {
-        "color": "#ff0000",
-        "abbreviatedColor": "R"
+        color: "#ff4040",
+        abbreviatedColor: "R"
     }
 ]
 const colorsEl = document.querySelector(".paintCube");
