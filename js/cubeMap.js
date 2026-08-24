@@ -135,8 +135,11 @@ createMainCube(scanBoxCube)
 export let cubeMap = initMap("#mainCube", true, [0, 1, 2, 3, 4, 5, 6, 7, 8]);
 export let scanBoxMap = initMap("#scanBox", true, [4]);
 
-export function resetMap(map, cubeId, colored, coloredStickersList){
-    map = initMap(cubeId, colored, coloredStickersList);
+export function resetMap(map, cubeId, colored, coloredStickersList) {
+    const newMap = initMap(cubeId, colored, coloredStickersList);
+
+    map.length = 0;
+    map.push(...newMap);
 }
 
 export function updateBackground(map, colored, coloredStickersList){
