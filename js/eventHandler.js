@@ -49,7 +49,7 @@ let timerStart = 0;
 let timerElapsed = 0;
 let timerInterval = null;
 
-export let selectedColor = "rgb(34, 34, 34)";
+export let selectedColor = "rgb(0, 0, 0)";
 export let selectedColorId = null;
 
 // functions
@@ -249,7 +249,7 @@ colorPickerInputs.forEach(element => {
 });
 
 resetColorBtn.addEventListener("click", () => {
-    selectedColor = "rgb(34, 34, 34)";
+    selectedColor = "rgb(0, 0, 0)";
     selectedColorId = null;
     resetColor();
 });
