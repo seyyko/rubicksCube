@@ -58,8 +58,7 @@
     --border-radius: calc(var(--c) / 4);
     border: 1px solid black;
     user-select: none;
-
-    perspective: 80px;
+    perspective: 50px;
     transform-style: preserve-3d;
 }
 
@@ -188,6 +187,7 @@
     width: 100%; height: 100%;
     transform: translateZ(1px);
     background-color: black;
+    transform-style: preserve-3d;
 }
 
 .cubeContainer.showCell .cube .face{
