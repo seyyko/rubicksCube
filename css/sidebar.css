@@ -78,12 +78,18 @@
     display: none;
 }
 
-#controls .tools h2{
+#controls .tools section{
     display: grid;
-    place-items: center start;
+    grid-template-columns: 1fr;
+    gap: var(--padding-size);
+}
+
+#controls .tools section h2{
+    display: grid;
+    place-items: center;
+    letter-spacing: 10px;
     padding-inline: var(--padding-size);
     height: var(--moves-button-size);
-    /* background-color: rgba(34, 34, 34, .2); */
 }
 
 /*  */
@@ -218,6 +224,25 @@
     background-color: rgba(34, 34, 34, 1);
     border: none; border-radius: 0;
     cursor: pointer;
+}
+
+.customHistory{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    height: var(--moves-button-size)
+}
+.customHistory input{
+    all: unset;
+    height: 100%;
+    padding-inline: var(--padding-size);
+    background-color: rgba(34, 34, 34, .1);
+}
+.customHistory button{
+    padding-inline: var(--padding-size);
+    background-color: rgba(34, 34, 34, .2);
+}
+.customHistory button:disabled{
+    background-color: rgba(34, 34, 34, 1);
 }
 
 
