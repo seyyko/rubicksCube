@@ -4,8 +4,8 @@ import { faceToLayer } from "./layerHandler.js";
 import { createPopup } from "./popup.js";
 
 const scanBox = document.getElementById("scanBox");
-const scanBoxBtn = document.querySelector(".tools .scan button:nth-of-type(1)");
-const scanBoxCheckBtn = document.querySelector(".tools .scan button:nth-of-type(2)");
+const scanBoxBtn = document.querySelector(".tools .scan button");
+const scanBoxCheckBtn = document.querySelector(".tools .checkScan button");
 
 const mainCanvas = [
     document.querySelector("#canvas #mainCube"),
