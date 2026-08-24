@@ -31,59 +31,76 @@
             <div id="controls">
                 <div class="moves"></div>
                 <div class="tools">
-                    <h2>colors</h2>
-                    <div class="paintCube">
-                        <span><input type="color"></span>
-                        <span><input type="color"></span>
-                        <span><input type="color"></span>
-                        <span><input type="color"></span>
-                        <span><input type="color"></span>
-                        <span><input type="color"></span>
-                    </div>
+                    <section class="colors">
+                        <h2>colors</h2>
+                        <div class="paintCube">
+                            <span><input type="color"></span>
+                            <span><input type="color"></span>
+                            <span><input type="color"></span>
+                            <span><input type="color"></span>
+                            <span><input type="color"></span>
+                            <span><input type="color"></span>
+                        </div>
 
-                    <div class="resetColor">
-                        <button>reset color</button>
-                    </div>
+                        <div class="resetColor">
+                            <button>reset color</button>
+                        </div>
 
-                    <div class="scan">
-                        <button>scan your cube</button>
-                        <button>check the cube</button>
-                    </div>
+                        <div class="scan">
+                            <button>scan your cube</button>
+                        </div>
+                        <div class="checkScan">
+                            <button>check the cube</button>
+                        </div>
+                    </section>
 
-                    <h2>view</h2>
+                    <section class="view">
+                        <h2>view</h2>
 
-                    <div class="resetPos">
-                        <button>reset position</button>
-                    </div>
+                        <div class="resetPos">
+                            <button>reset position</button>
+                        </div>
 
-                    <div class="debug">
-                        <input type="checkbox" name="debug">
-                        <label for="debug">debug mode</label>
-                    </div>
+                        <div class="debug">
+                            <input type="checkbox" name="debug">
+                            <label for="debug">debug mode</label>
+                        </div>
+                    </section>
 
-                    <h2>solving</h2>
+                    <section class="solving">
+                        <h2>solving</h2>
 
-                    <div class="solve">
-                        <button>solve the cube</button>
-                    </div>
+                        <div class="solve">
+                            <button>solve the cube</button>
+                        </div>
 
-                    <div class="playbackControls">
-                        <button class="previous">◀◀</button>
-                        <button class="pause">❚❚</button>
-                        <button class="play">▶</button>
-                        <button class="stop">■</button>
-                        <button class="next">▶▶</button>
-                    </div>
+                        <form class="customHistory">
+                            <input
+                                type="text"
+                                name="customHistory"
+                                placeholder="Enter your scramble"
+                            >
+                            <button type="submit">submit</button>
+                        </form>
 
-                    <div class="solvingDelay">
-                        <label>
-                            <span>0sec</span>
-                            <span>delay</span>
-                            <span>1sec</span>
-                        </label>
-                        <input type="range" value="5" max="10">
-                        <label></label>
-                    </div>
+                        <div class="playbackControls">
+                            <button class="previous">◀◀</button>
+                            <button class="pause">❚❚</button>
+                            <button class="play">▶</button>
+                            <button class="stop">■</button>
+                            <button class="next">▶▶</button>
+                        </div>
+
+                        <div class="solvingDelay">
+                            <label>
+                                <span>0sec</span>
+                                <span>range delay</span>
+                                <span>1sec</span>
+                            </label>
+                            <input type="range" value="5" max="10">
+                            <label></label>
+                        </div>
+                    </section>
                 </div>
             </div>
 
