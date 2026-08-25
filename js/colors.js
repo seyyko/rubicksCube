@@ -3,6 +3,33 @@ import { updateBackground, cubeMap } from "./cubeMap.js";
 // Default cube colors.
 // Each color is associated with a one-letter abbreviation
 // used throughout the rendering of the cube map.
+export const flatColors = [
+    {
+        color: "#ffffff",
+        abbreviatedColor: "W"
+    },
+    {
+        color: "#ff0000",
+        abbreviatedColor: "R"
+    },
+    {
+        color: "#ff8000",
+        abbreviatedColor: "O"
+    },
+    {
+        color: "#ffff00",
+        abbreviatedColor: "Y"
+    },
+    {
+        color: "#00a000",
+        abbreviatedColor: "G"
+    },
+    {
+        color: "#0000ff",
+        abbreviatedColor: "B"
+    }
+];
+
 const baseColors = [
     {
         color: "#f5f5f5",
