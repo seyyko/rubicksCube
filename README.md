@@ -13,7 +13,7 @@ Simulateur de Rubik's Cube 3D développé en HTML, CSS et JavaScript.
 - [x] Contrôles de lecture
 - [x] Personnalisation des couleurs
 - [x] Personnalisation des stickers (peinture)
-- [ ] scan IRL
+- [x] scan IRL
 - [x] Résolution complète (7/7)
 - [x] Chronomètre de résolution
 
@@ -62,4 +62,4 @@ Le site a été testé avec **Google Lighthouse** afin d'évaluer ses performanc
 
 ## **[Découvrir le projet](https://seyyko.github.io/rubicksCube/)**
 
-![Aperçu du Rubik's Cube](./img/191.png)
+![Aperçu du Rubik's Cube](./img/rubicksCube.png)
