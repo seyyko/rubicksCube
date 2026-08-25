@@ -63,7 +63,7 @@ function initMap(cubeId, colored, coloredStickersList){
             tempMap[i].push({
                 color: coloredStickersList.includes(j) ?
                 colors[i].color :
-                "rgb(34, 34, 34)",
+                "rgb(0, 0, 0)",
                 colorId: coloredStickersList.includes(j) ?
                 i :
                 null,
