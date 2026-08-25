@@ -7,7 +7,7 @@
     overflow: hidden;
     user-select: none;
     touch-action: none;
-    background-color: rgba(34, 34, 34, 0.2);
+    background-color: rgba(34, 34, 34, 0.4);
 }
 
 .cubeContainer{
@@ -16,7 +16,6 @@
     transform-style: preserve-3d;
 
     transform: rotateX(-30deg) rotateY(-45deg);
-    cursor: grab;
 }
 
 
@@ -53,6 +52,15 @@
 
 #scanBox .cubeContainer .face.outer{
     border: 1px solid rgb(34, 34, 34);
+    background-color: rgb(0, 0, 0);
+}
+#scanBox .cubeContainer .face.outer:hover{
+    cursor: pointer;
+    opacity: .4;
+}
+#scanBox .cubeContainer .face:hover::before{
+    opacity: 0;
+
 }
 .cubeContainer .face.outer{
     --border-radius: calc(var(--c) / 4);
@@ -191,7 +199,7 @@
 }
 
 .cubeContainer.showCell .cube .face{
-    opacity: .2;
+    opacity: .4;
 }
 .cubeContainer.showCell .cube .face::before,
 .cubeContainer.showCell .cube .face.inner{
@@ -308,6 +316,6 @@
     top: 0; left: 0;
     padding: var(--padding-size);
 
-    background-color: rgba(34, 34, 34, 0.2);
+    background-color: rgba(34, 34, 34, 0.4);
     color: white;
 }
