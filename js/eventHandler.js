@@ -179,6 +179,16 @@ function validateScramble(scramble){
     return [true]
 }
 
+export function resetSelectedColor(){
+    selectedColor = "rgb(0, 0, 0)";
+    selectedColorId = null;
+}
+
+export function setSelectedColor(sc, scId){
+    selectedColor = sc;
+    selectedColorId = scId;
+}
+
 // events
 
 movesButtons.forEach(element => {
