@@ -1,17 +1,37 @@
 #scanBox{
-    display: grid;
     position: absolute;
-    width: 100%; height: 100%;
     top: 0; left: 0;
+
+    display: grid;
+    grid-template-rows: 1fr auto;
     place-items: center;
+
+    width: 100%; height: 100%;
     perspective: 800px;
 
     display: none;
 }
 
+#scanBox>p{
+    position: absolute;
+    top: 0; left: 0;
+
+    display: grid;
+    color: white;
+    font-size: 8px;
+}
+#scanBox>p>span{
+    display: grid;
+    grid-template-columns: 2fr auto 1fr;
+    gap: calc(var(--padding-size) / 2);
+    background-color: rgba(34, 34, 34, 0.4);
+}
+/* #scanBox>p>span>span{
+} */
+
 .tools .scan button,
 .tools .checkScan button{
-    background-color: rgba(34, 34, 34, 0.2);
+    background-color: rgba(34, 34, 34, 0.4);
     height: var(--moves-button-size);
     width: 100%;
     display: grid;
@@ -19,12 +39,108 @@
 }
 
 #camera{
-    /* background-color: rgba(255, 0, 0, 0.2); */
     position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: var(--moves-button-size);
+    padding: var(--padding-size);
+
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--padding-size);
+    
+    /* display: none; */
+    background-color: rgba(34, 34, 34, 0.4);
+    z-index: 9;
+}
+#camera button{
+    height: 100%;
+    text-align: center;
+    background-color: rgba(34, 34, 34, 0.4);
+    color: white;
+}
+#camera button.active{
+    background-color: rgba(144, 238, 144, 0.4);
+}
+
+#crop{
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, calc(-50% - var(--moves-button-size) / 2));
+    min-height: calc(100% - 2 * var(--moves-button-size));
+    max-height: 300px;
+    aspect-ratio: 1;
+
+    display: grid;
+    grid-template-rows: 1fr var(--moves-button-size);
+
+    touch-action: none;
+    overflow: hidden;
+    place-items: center;
+
+    padding-top: var(--moves-button-size);
+
+    background-color: rgba(34, 34, 34, .4);
+    display: none;
+}
+#crop.show{
+    display: grid;
+}
+
+#crop>button{
+    width: 100%;
+    height: 100%;
+    color: white;
+    text-align: center;
+    background-color: rgba(34, 34, 34, .4);
+}
+
+#crop>div{
+    /* position: absolute; */
+    position: relative;
     top: 0; left: 0;
+    height: 100%;
+    aspect-ratio: 1;
+    
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+
+    overflow: hidden;
+    border: 1px solid rgba(34, 34, 34, 0.4);
+}
+#crop>div::before{
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 100%; height: 100%;
+    background-color: rgb(34, 34, 34);
+}
+
+#crop>div>img{
+    position: absolute;
+    z-index: -1;
+    object-fit: contain;
     width: 100%;
     height: 100%;
     pointer-events: none;
-    
-    display: none;
+    user-select: none;
+    -webkit-user-drag: none;
+
+    transform-origin: 0 0;
+}
+
+#crop>div>div{
+    height: 100%;
+    /* aspect-ratio: 1; */
+    border: 1px solid white;
+    display: grid;
+    place-items: center;
+}
+#crop>div>div::after{
+    content: "";
+    width: 3px;
+    aspect-ratio: 1;
+    background-color: white;
+    border: 3px solid rgb(34, 34, 34);
 }
