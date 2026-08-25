@@ -43,22 +43,33 @@ Son record étant d'environ **20 à 35 secondes**, j'ai fixé un délai de **0,2
 
 ## Performances du site
 
-Le site a été testé avec **Google Lighthouse** afin d'évaluer ses performances sur mobile et ordinateur.
-[Voir les résultats du test Lighthouse](https://pagespeed.web.dev/analysis/https-seyyko-github-io-rubicksCube/ae1ty0uqpf?form_factor=mobile)
+Le site a été testé avec **Google Lighthouse** afin d'évaluer ses performances, son accessibilité, ses bonnes pratiques et son référencement, sur mobile et ordinateur.
+
+[Voir les résultats du test Lighthouse](https://pagespeed.web.dev/analysis/https-seyyko-github-io-rubicksCube/xx88dhxi6j?form_factor=mobile)
 
 | Indicateur | 📱 Mobile | 🖥️ Ordinateur |
 |:---|:---:|:---:|
-| **Performances** | **100/100** | **100/100** |
+| **Performances** | **99/100** | **100/100** |
 | **Accessibilité** | **100/100** | **100/100** |
 | **Bonnes pratiques** | **100/100** | **100/100** |
 | **SEO** | **100/100** | **100/100** |
-| First Contentful Paint | 0,9 s | 0,2 s |
-| Largest Contentful Paint | 1,1 s | 0,2 s |
+| First Contentful Paint | 1,0 s | 0,3 s |
+| Largest Contentful Paint | 1,1 s | 0,3 s |
 | Total Blocking Time | 0 ms | 0 ms |
 | Cumulative Layout Shift | 0 | 0 |
-| Speed Index | 0,9 s | 0,3 s |
+| Speed Index | 3,6 s | 0,3 s |
 
->Les tests ont été réalisés le **20 août 2026** avec **Lighthouse 13.4.1**, sur une connexion 4G simulée pour mobile et en configuration ordinateur.
+### Configuration des tests
+
+- **Mobile :** émulation d'un **Moto G Power** avec une connexion **4G lente**
+- **Ordinateur :** émulation ordinateur avec une limitation réseau personnalisée
+- **Lighthouse :** 13.4.1
+- **Date :** 25 août 2026 à 20:28 (UTC+2)
+- **Navigateur :** HeadlessChromium 151.0.7922.71
+- **Session :** consultation d'une seule page
+- **Chargement :** page initiale
+
+> Les valeurs peuvent varier légèrement d'un test à l'autre. Le score de performance est calculé à partir des différentes métriques mesurées par Lighthouse.
 
 ## **[Découvrir le projet](https://seyyko.github.io/rubicksCube/)**
 
