@@ -1,4 +1,4 @@
-import { selectedColor, selectedColorId } from "./eventHandler.js";
+import { resetSelectedColor, selectedColor, selectedColorId, setSelectedColor } from "./eventHandler.js";
 import { cubeToFaces, faceToLayer } from "./layerHandler.js";
 import { scanBoxMap } from "./cubeMap.js";
 
@@ -20,11 +20,18 @@ const posY = -45;
 let rx = posX;
 let ry = posY;
 
+let tempSelectedColor;
+let tempSelectedColorId;
+
 document.querySelectorAll(".cube p").forEach(element => {
     element.style.transform = `rotateY(${-posY}deg) rotateX(${-posX}deg)`;
 });
 
+canvas.addEventListener("contextmenu", e => e.preventDefault());
+
 canvas.addEventListener("pointerdown", e => {
+    if (e.target.closest("#camera, #crop")) return;
+
     pointerDown = true;
     drag = false;
 
@@ -32,10 +39,15 @@ canvas.addEventListener("pointerdown", e => {
     y = e.clientY;
 
     clickedFace = e.target.closest("#scanBox .face");
+    tempSelectedColor = selectedColor;
+    tempSelectedColorId = selectedColorId;
+    if (e.button == 2) {
+        e.preventDefault()
+        resetSelectedColor();
+    }
 
     canvas.setPointerCapture(e.pointerId);
 });
-
 
 canvas.addEventListener("pointermove", e => {
     if (!pointerDown) return;
@@ -55,11 +67,10 @@ canvas.addEventListener("pointermove", e => {
     x = e.clientX;
     y = e.clientY;
 
-    mainCube.style.transform =
-        `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    document.body.style.cursor = "grab";
 
-    scanBoxCube.style.transform =
-        `rotateX(${rx}deg) rotateY(${ry}deg)`;
+    [mainCube, scanBoxCube]
+    .map(cube => cube.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`);
 
     if (mainCube.classList.contains("showCell")) {
         document.querySelectorAll(".cube p").forEach(element => {
@@ -69,36 +80,27 @@ canvas.addEventListener("pointermove", e => {
     }
 });
 
-
 canvas.addEventListener("pointerup", e => {
-    if (!drag && clickedFace) {
+    if (!drag && clickedFace){
         clickedFace.style.backgroundColor = selectedColor;
         const position =
-        Array.from(clickedFace.parentElement.children).indexOf(clickedFace) + 1;
+        Array.from(clickedFace.parentElement.children)
+        .indexOf(clickedFace) + 1;
         
         const cube = parseInt(clickedFace.parentElement.id.slice(1));
         const layerData = cubeToFaces[cube][position];
-        const face = faceToLayer[layerData[0]];
+        const face = layerData[0];
         const piece = layerData[1];
 
-        for (let i = 0; i < scanBoxMap.length; i++) {
-            for (let j = 0; j < scanBoxMap[i].length; j++) {
-                if (
-                    layerData[0] === i
-                    && layerData[1] === j
-                ){
-                    scanBoxMap[i][j].color = selectedColor;
-                    scanBoxMap[i][j].colorId = selectedColorId;
-                }
-            }
-        }
-
-        console.log("\nface:", face, "\npiece", piece)
+        scanBoxMap[face][piece].color = selectedColor;
+        scanBoxMap[face][piece].colorId = selectedColorId;
     }
 
     pointerDown = false;
     drag = false;
     clickedFace = null;
+    setSelectedColor(tempSelectedColor, tempSelectedColorId);
+    document.body.style.cursor = "default";
 
     canvas.releasePointerCapture(e.pointerId);
 });
