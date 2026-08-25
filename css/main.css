@@ -90,6 +90,11 @@ main {
         grid-template-columns: 250px 1fr;
     }
 }
+@media screen and (min-width: 800px) and (max-height: 700px) {
+    :root{
+        --c: 75px;
+    }
+}
 
 @media screen and (max-width: 650px) {
     :root{
@@ -97,7 +102,7 @@ main {
     }
     main{
         grid-template-columns: 100px 1fr;
-        grid-template-rows: var(--history-height) minmax(250px, 1fr) minmax(165px, 260px);
+        grid-template-rows: var(--history-height) minmax(295px, 1fr) minmax(100px, 300px);
         /* height: min-content; */
         max-height: 100dvh;
 
@@ -108,9 +113,26 @@ main {
     }
 }
 
+@media screen and (max-width: 650px) and (max-height: 800px) {
+    :root{
+        --c: 50px;
+    }
+}
+@media screen and (max-width: 650px) and (max-height: 660px) {
+    :root{
+        --c: 30px;
+    }
+}
+
 @media screen and (max-width: 400px) {
     :root{
         --c: 50px;
+    }
+}
+
+@media screen and (max-width: 400px) and (max-height: 660px) {
+    :root{
+        --c: 30px;
     }
 }
 
