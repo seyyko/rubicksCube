@@ -115,6 +115,73 @@
             <div id="timer">00:00:00</div>
             <div id="scanBox">
                 <div class="cubeContainer"></div>
+                <section id="camera">
+                    <button class="front">FRONT</button>
+                    <button class="upper">UPPER</button>
+                    <button class="right">RIGHT</button>
+                    <button class="left">LEFT</button>
+                    <button class="back">BACK</button>
+                    <button class="down">DOWN</button>
+                    <input
+                        type="file"
+                        id="cameraInput"
+                        accept="image/*"
+                        capture="environment"
+                        hidden
+                    >
+                </section>
+                <section id="crop">
+                    <div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <img src="img/191.png" alt="face's scan image">
+                    </div>
+                    <button>Confirm</button>
+                </section>
+                <p>
+                    <span>
+                        <span>> Left click (colors)</span>
+                        <span>:</span>
+                        <span>select color</span>
+                    </span>
+                    <span>
+                        <span>> Hold/Right click (colors)</span>
+                        <span>:</span>
+                        <span>change color</span>
+                    </span>
+                    <span>
+                        <span>> Left click</span>
+                        <span>:</span>
+                        <span>paint</span>
+                    </span>
+                    <span>
+                        <span>> Right click</span>
+                        <span>:</span>
+                        <span>erase</span>
+                    </span>
+                    <span>
+                        <span>> Left click face</span>
+                        <span>:</span>
+                        <span>scan</span>
+                    </span>
+                    <span>
+                        <span>> Right click face</span>
+                        <span>:</span>
+                        <span>erase</span>
+                    </span>
+                    <span>
+                        <span>> Drag</span>
+                        <span>:</span>
+                        <span>rotate</span>
+                    </span>
+                </p>
             </div>
         </div>
         <div id="bg"></div>
@@ -132,10 +199,6 @@
         </div>
         <button class="yesBtn"><b></b></button>
         <button class="noBtn"><b></b></button>
-    </section>
-
-    <section id="camera">
-        
     </section>
     
     <script type="module" src="./js/main.js"></script>
