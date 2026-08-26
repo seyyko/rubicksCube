@@ -43,13 +43,20 @@ export function getClosestFlatColor(color) {
         return null;
     }
 
-    const hsv = rgbToHsv(color.r, color.g, color.b);
+    const hsv = rgbToHsv(
+        color.r,
+        color.g,
+        color.b
+    );
 
     if (hsv.v < 0.15) {
         return null;
     }
 
-    if (hsv.s < 0.35 && hsv.v > 0.55) {
+    if (
+        hsv.s < 0.25 &&
+        hsv.v > 0.55
+    ) {
         return flatColors.find(
             color => color.abbreviatedColor === "W"
         ) ?? null;
@@ -64,7 +71,12 @@ export function getClosestFlatColor(color) {
         }
 
         const rgb = hexToRgb(flatColor.color);
-        const flatHsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
+
+        const flatHsv = rgbToHsv(
+            rgb.r,
+            rgb.g,
+            rgb.b
+        );
 
         const hueDistance = Math.min(
             Math.abs(hsv.h - flatHsv.h),
@@ -78,9 +90,9 @@ export function getClosestFlatColor(color) {
             Math.abs(hsv.v - flatHsv.v);
 
         const distance =
-            hueDistance / 360 +
-            saturationDistance * 0.5 +
-            valueDistance * 0.2;
+            (hueDistance / 180) * 0.6 +
+            saturationDistance * 0.25 +
+            valueDistance * 0.15;
 
         if (distance < smallestDistance) {
             smallestDistance = distance;
@@ -88,7 +100,7 @@ export function getClosestFlatColor(color) {
         }
     }
 
-    const MAX_DISTANCE = 0.25;
+    const MAX_DISTANCE = 0.45;
 
     if (smallestDistance > MAX_DISTANCE) {
         return null;
@@ -115,13 +127,18 @@ export function getPastelColor(color) {
 }
 
 export function getAverageColor(ctx, canvas, x, y, radius = 15) {
-    const colorsCount = new Map();
-    const pixelsByColor = new Map();
-
     const startX = Math.max(0, Math.round(x - radius));
     const startY = Math.max(0, Math.round(y - radius));
-    const endX = Math.min(canvas.width, Math.round(x + radius + 1));
-    const endY = Math.min(canvas.height, Math.round(y + radius + 1));
+
+    const endX = Math.min(
+        canvas.width,
+        Math.round(x + radius + 1)
+    );
+
+    const endY = Math.min(
+        canvas.height,
+        Math.round(y + radius + 1)
+    );
 
     if (startX >= endX || startY >= endY) {
         return null;
@@ -134,65 +151,32 @@ export function getAverageColor(ctx, canvas, x, y, radius = 15) {
         endY - startY
     );
 
-    for (let i = 0; i < imageData.data.length; i += 4) {
-        const r = imageData.data[i];
-        const g = imageData.data[i + 1];
-        const b = imageData.data[i + 2];
-        const a = imageData.data[i + 3];
-
-        if (a === 0) {
-            continue;
-        }
-
-        const flatColor = getClosestFlatColor({ r, g, b });
-
-        if (!flatColor) {
-            continue;
-        }
-
-        const id = flatColor.abbreviatedColor;
-
-        colorsCount.set(
-            id,
-            (colorsCount.get(id) ?? 0) + 1
-        );
-
-        if (!pixelsByColor.has(id)) {
-            pixelsByColor.set(id, []);
-        }
-
-        pixelsByColor.get(id).push({ r, g, b });
-    }
-
-    if (colorsCount.size === 0) {
-        return null;
-    }
-
-    let dominantColor = null;
-    let maxCount = 0;
-
-    for (const [id, count] of colorsCount) {
-        if (count > maxCount) {
-            maxCount = count;
-            dominantColor = id;
-        }
-    }
-
-    const pixels = pixelsByColor.get(dominantColor);
-
     let r = 0;
     let g = 0;
     let b = 0;
+    let count = 0;
 
-    for (const pixel of pixels) {
-        r += pixel.r;
-        g += pixel.g;
-        b += pixel.b;
+    for (let i = 0; i < imageData.data.length; i += 4) {
+        const alpha = imageData.data[i + 3];
+
+        if (alpha === 0) {
+            continue;
+        }
+
+        r += imageData.data[i];
+        g += imageData.data[i + 1];
+        b += imageData.data[i + 2];
+
+        count++;
     }
 
-    r = Math.round(r / pixels.length);
-    g = Math.round(g / pixels.length);
-    b = Math.round(b / pixels.length);
+    if (count === 0) {
+        return null;
+    }
+
+    r = Math.round(r / count);
+    g = Math.round(g / count);
+    b = Math.round(b / count);
 
     return {
         r,
