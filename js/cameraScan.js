@@ -36,31 +36,93 @@ export function initCameraScan() {
     let lastDistance = null;
 
     cameraBtns.forEach(button => {
-        button.addEventListener("pointerdown", event => {
-            faceScanned = button.classList[0];
 
-            if (event.button === 2) {
-                button.classList.remove("active");
+        let timer = null;
+        let longPress = false;
 
-                const face =
-                    scanBoxMap[layerToFace[`${faceScanned}Layer`]];
+        const resetFace = () => {
 
-                for (let i = 0; i < face.length; i++) {
-                    face[i].color = "rgb(0, 0, 0)";
-                    face[i].colorId = null;
-                }
+            button.classList.remove("active");
 
-                updateBackground(
-                    scanBoxMap,
-                    true,
-                    [0, 1, 2, 3, 4, 5, 6, 7, 8]
-                );
+            const face =
+                scanBoxMap[
+                    layerToFace[`${button.classList[0]}Layer`]
+                ];
 
+            for (let i = 0; i < face.length; i++) {
+                face[i].color = "rgb(0, 0, 0)";
+                face[i].colorId = null;
+            }
+
+            updateBackground(
+                scanBoxMap,
+                true,
+                [0, 1, 2, 3, 4, 5, 6, 7, 8]
+            );
+        };
+
+        button.addEventListener("click", event => {
+
+            if (longPress) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                longPress = false;
                 return;
             }
 
             cameraInput.click();
         });
+
+        button.addEventListener("contextmenu", event => {
+
+            event.preventDefault();
+
+            faceScanned = button.classList[0];
+
+            resetFace();
+        });
+
+        button.addEventListener("pointerdown", event => {
+
+            if (event.button !== 0) {
+                return;
+            }
+
+            faceScanned = button.classList[0];
+
+            longPress = false;
+
+            timer = setTimeout(() => {
+
+                longPress = true;
+
+                resetFace();
+
+            }, 600);
+        });
+
+        button.addEventListener("pointerup", event => {
+
+            if (event.button !== 0) {
+                return;
+            }
+
+            clearTimeout(timer);
+        });
+
+        // SORTIE
+        button.addEventListener("pointerleave", () => {
+
+            clearTimeout(timer);
+        });
+
+        // ANNULATION
+        button.addEventListener("pointercancel", () => {
+
+            clearTimeout(timer);
+        });
+
     });
 
     cameraInput.addEventListener("change", () => {
