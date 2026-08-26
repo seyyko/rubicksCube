@@ -22,12 +22,10 @@
 }
 #scanBox>p>span{
     display: grid;
-    grid-template-columns: 2fr auto 1fr;
+    grid-template-columns: 1fr auto 2fr;
     gap: calc(var(--padding-size) / 2);
     background-color: rgba(34, 34, 34, 0.4);
 }
-/* #scanBox>p>span>span{
-} */
 
 .tools .scan button,
 .tools .checkScan button{
