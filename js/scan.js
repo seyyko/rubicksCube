@@ -1,17 +1,8 @@
 import { colors } from "./colors.js";
-import {
-    cubeMap,
-    scanBoxMap,
-    updateBackground
-} from "./cubeMap.js";
+import { cubeMap, scanBoxMap, updateBackground } from "./cubeMap.js";
 import { faceToLayer } from "./layerHandler.js";
 import { createPopup } from "./popup.js";
-import {
-    validateCenters,
-    validateColorCounts,
-    validatePieces,
-    validateCornersTwisted
-} from "./scanValidation.js";
+import { validateCenters, validateColorCounts, validatePieces, validateCornersTwisted } from "./scanValidation.js";
 import { initCameraScan } from "./cameraScan.js";
 
 const scanBox = document.getElementById("scanBox");
@@ -35,8 +26,6 @@ scanBoxBtn.addEventListener("click", () => {
 });
 
 async function reportError(title, id, desc, btns) {
-    const popup = document.getElementById("popup");
-
     const result = await createPopup(
         "errorPopup",
         title,
@@ -44,7 +33,6 @@ async function reportError(title, id, desc, btns) {
         desc,
         btns
     );
-
     console.log("A popup of that error has been successfully created.");
     return result;
 }
