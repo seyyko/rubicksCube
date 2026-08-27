@@ -36,6 +36,10 @@
     place-items: center;
 }
 
+.tools .scan button.active{
+    filter: invert(1);
+}
+
 #camera{
     position: absolute;
     bottom: 0;
