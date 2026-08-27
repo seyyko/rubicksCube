@@ -21,7 +21,13 @@ scanBoxBtn.addEventListener("click", () => {
         element.style.display = isScanBoxShowed ? "grid" : "none";
     });
 
-    scanBox.style.display = isScanBoxShowed ? "none" : "grid";
+    if (isScanBoxShowed){
+        scanBox.style.display = "none";
+        scanBoxBtn.classList.remove("active");
+    }else{
+        scanBox.style.display = "grid";
+        scanBoxBtn.classList.add("active");
+    }
     isScanBoxShowed = !isScanBoxShowed;
 });
 
